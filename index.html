@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Conversational Memory — General Assembly BAA 8.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#0d0d0d;--black2:#1a1a1a;--black3:#252525;--black4:#333;
+  --line:#2e2e2e;--line2:#404040;--gray-dk:#555;--gray:#888;
+  --gray-lt:#bbb;--white:#fff;
+  --GA-red:#e8333a;--GA-red2:#ff4a50;
+  --yellow:#f5c518;--green:#22c55e;--blue:#3b82f6;--purple:#a855f7;
+  --teal:#14b8a6;--orange:#f97316;--pink:#ec4899;
+  --r:4px;--r-lg:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);font-size:16px;line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--black2)}::-webkit-scrollbar-thumb{background:var(--black4);border-radius:3px}
+header{position:sticky;top:0;z-index:500;background:var(--black);border-bottom:2px solid var(--GA-red);display:flex;align-items:stretch;height:58px}
+.ga-logo{display:flex;align-items:center;gap:10px;padding:0 20px;border-right:1px solid var(--line);flex-shrink:0;cursor:pointer}
+.ga-mark{width:32px;height:32px;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;border-radius:2px}
+.ga-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gray-lt);text-transform:uppercase;line-height:1.2}
+.ga-name span{display:block;font-size:10px;color:var(--gray);font-weight:600}
+.tab-bar{display:flex;align-items:stretch;overflow-x:auto;flex:1;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;padding:0 15px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;position:relative;top:2px}
+.tab:hover{color:#fff}
+.tab.active{color:#fff;border-bottom-color:var(--GA-red)}
+.hd-end{display:flex;align-items:center;padding:0 18px;border-left:1px solid var(--line);flex-shrink:0}
+.prog-chip{background:var(--GA-red);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:20px}
+.section{display:none}.section.active{display:block}
+.wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--GA-red);margin-bottom:10px;display:block}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:16px}
+h1 .red{color:var(--GA-red)}
+h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;line-height:1.1;color:#fff;margin-bottom:8px}
+h2 .red{color:var(--GA-red)}
+.lead{font-size:1.05rem;color:var(--gray-lt);line-height:1.7;margin-bottom:28px;max-width:640px}
+.hr{height:1px;background:var(--line);margin:36px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;white-space:nowrap}
+.btn-red{background:var(--GA-red);color:#fff;border-color:var(--GA-red)}.btn-red:hover{background:var(--GA-red2);transform:translateY(-1px)}
+.btn-green{background:var(--green);color:var(--black);border-color:var(--green)}.btn-green:hover{background:#16a34a;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--gray-lt);border:2px solid var(--line2);padding:10px 20px;font-size:.88rem;font-weight:600;cursor:pointer;border-radius:var(--r);transition:all .15s}.btn-ghost:hover{border-color:var(--gray);color:#fff}
+.card{background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;margin-bottom:16px}
+.card-rb{border-top:3px solid var(--GA-red)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.b-green{background:rgba(34,197,94,.18);color:var(--green)}.b-red{background:rgba(232,51,58,.18);color:var(--GA-red)}.b-yellow{background:rgba(245,197,24,.18);color:var(--yellow)}.b-blue{background:rgba(59,130,246,.18);color:var(--blue)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.a1{animation:fadeUp .35s ease both}.a2{animation:fadeUp .35s .1s ease both}.a3{animation:fadeUp .35s .2s ease both}
+/* HERO */
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--black3);border:1px solid var(--line);border-radius:var(--r);padding:6px 14px;margin-bottom:20px;font-size:12px;font-weight:600;color:var(--gray-lt);letter-spacing:.04em}
+.hero-kicker .dot{width:8px;height:8px;background:var(--GA-red);border-radius:50%}
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:32px}
+.obj-card{background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:flex;gap:14px}
+.obj-num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--GA-red);line-height:1;flex-shrink:0}
+.obj-body{font-size:.9rem;color:var(--gray-lt);line-height:1.55;padding-top:4px}
+.roadmap{display:flex;flex-direction:column}
+.rm-item{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rm-item:last-child{border-bottom:none}
+.rm-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;border:2px solid var(--line);background:var(--black3);color:var(--gray);transition:all .25s}
+.rm-dot.done{background:var(--green);border-color:var(--green);color:var(--black)}
+.rm-dot.active{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.rm-label{font-size:.95rem;font-weight:600;color:var(--gray);padding-top:6px;transition:color .2s}
+.rm-label.active{color:#fff}.rm-label.done{color:var(--green);text-decoration:line-through}
+.rm-sub{font-size:.8rem;color:var(--gray-dk);margin-top:2px}
+/* CALLOUTS */
+.callout{border-radius:var(--r-lg);padding:14px 16px;margin:12px 0;font-size:.88rem;line-height:1.65}
+.callout-tip{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+.callout-warn{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2);color:#fde68a}
+.callout-rag{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);color:#d8b4fe}
+.callout-success{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#86efac}
+.callout strong{color:#fff}
+/* MEMORY TYPE EXPLORER */
+.mem-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mem-pill{padding:10px 20px;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--black3);cursor:pointer;transition:all .18s;font-weight:700;font-size:.9rem;color:var(--gray);display:flex;align-items:center;gap:8px}
+.mem-pill:hover{border-color:var(--line2);color:#fff}
+.mem-detail{border-radius:var(--r-lg);padding:22px 24px;font-size:.95rem;line-height:1.8;min-height:90px;border:1px solid var(--line);transition:all .2s;margin-bottom:22px;color:var(--gray-lt)}
+/* CHAT SIMULATOR */
+.sim-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:620px){.sim-wrap{grid-template-columns:1fr}}
+.sim-panel{border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column}
+.sim-head{padding:12px 16px;display:flex;align-items:center;gap:8px}
+.sim-icon{font-size:1rem;flex-shrink:0}
+.sim-title{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.sim-body{flex:1;padding:14px;min-height:260px;display:flex;flex-direction:column;gap:8px;background:var(--black2);border:1px solid var(--line);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);overflow-y:auto}
+.chat-bubble{padding:10px 14px;border-radius:10px;font-size:.85rem;line-height:1.6;max-width:92%;animation:fadeUp .25s ease both}
+.bubble-user{background:rgba(232,51,58,.12);border:1px solid rgba(232,51,58,.2);align-self:flex-end;color:#fca5a5}
+.bubble-agent{background:var(--black3);border:1px solid var(--line);align-self:flex-start;color:var(--gray-lt)}
+.bubble-agent.highlight{border-color:var(--green);background:rgba(34,197,94,.06);color:#fff}
+.bubble-agent.fail{border-color:var(--GA-red);background:rgba(232,51,58,.06);color:#fca5a5}
+.bubble-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gray-dk);margin-bottom:3px;letter-spacing:.06em;text-transform:uppercase}
+.sim-ctrl{padding:12px;background:var(--black3);border:1px solid var(--line);border-top:none;display:flex;gap:8px}
+.sim-input{flex:1;background:var(--black2);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#fff;outline:none}
+.sim-input:focus{border-color:var(--GA-red)}
+.sim-send{background:var(--GA-red);border:none;color:#fff;padding:8px 14px;border-radius:var(--r);font-weight:700;cursor:pointer;font-size:.85rem;transition:all .15s}
+.sim-send:hover{background:var(--GA-red2)}
+/* DRAG DROP */
+.drag-pool{background:var(--black3);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:18px}
+.pool-label{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:10px}
+.drag-chips{display:flex;flex-wrap:wrap;gap:8px;min-height:36px}
+.drag-chip{display:inline-flex;padding:8px 14px;border-radius:20px;background:var(--black2);border:1.5px solid var(--line2);color:var(--gray-lt);font-size:.83rem;font-weight:600;cursor:grab;user-select:none;transition:all .15s;line-height:1.4}
+.drag-chip:hover{border-color:var(--GA-red);color:#fff}
+.drag-chip.correct{background:rgba(34,197,94,.12);border-color:var(--green);color:var(--green);cursor:default}
+.drag-chip.wrong{background:rgba(232,51,58,.12);border-color:var(--GA-red);color:var(--GA-red);cursor:default}
+.drop-zone{border-radius:var(--r-lg);overflow:hidden;margin-bottom:10px}
+.dz-head{padding:12px 18px;display:flex;align-items:center;gap:10px}
+.dz-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.dz-sub{font-size:.76rem;color:rgba(255,255,255,.4);margin-top:1px}
+.dz-body{background:var(--black2);border:1px solid var(--line);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);padding:12px;min-height:68px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:background .15s}
+.dz-body.over{background:var(--black3)}
+/* SYSTEMS DESIGN CANVAS */
+.arch-canvas{background:var(--black3);border:1px solid var(--line2);border-radius:var(--r-lg);padding:24px;margin-bottom:20px;position:relative}
+.arch-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:18px}
+.arch-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.arch-node{border-radius:var(--r-lg);padding:10px 14px;text-align:center;min-width:100px;flex-shrink:0;position:relative;transition:all .2s}
+.arch-node .n-icon{font-size:1.2rem;display:block;margin-bottom:4px}
+.arch-node .n-label{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;display:block}
+.arch-node .n-sub{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:2px;display:block}
+.arch-arrow{color:var(--gray-dk);font-size:.9rem;flex-shrink:0}
+.arch-drop-slot{border:2px dashed var(--line2);border-radius:var(--r-lg);padding:10px 14px;min-width:110px;min-height:68px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;cursor:pointer}
+.arch-drop-slot.over{border-color:var(--GA-red);background:rgba(232,51,58,.06)}
+.arch-drop-slot.filled{border-style:solid}
+.arch-drop-slot.correct{border-color:var(--green);background:rgba(34,197,94,.06)}
+.arch-drop-slot.wrong{border-color:var(--GA-red);background:rgba(232,51,58,.06)}
+.slot-placeholder{font-size:.72rem;color:var(--gray-dk);text-align:center;line-height:1.4}
+.arch-chip-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;justify-content:center}
+.arch-chip{padding:9px 16px;border-radius:var(--r-lg);border:1.5px solid var(--line2);background:var(--black2);font-size:.83rem;font-weight:600;color:var(--gray-lt);cursor:grab;user-select:none;transition:all .15s;display:flex;align-items:center;gap:7px}
+.arch-chip:hover{border-color:var(--blue);color:#fff}
+/* RAG PIPELINE */
+.rag-flow{display:flex;flex-direction:column;gap:0}
+.rag-step{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);position:relative}
+.rag-step:last-child{border-bottom:none}
+.rag-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;border:2px solid}
+.rag-label{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:3px}
+.rag-desc{font-size:.88rem;color:var(--gray-lt);line-height:1.6}
+.rag-match{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.75rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:4px}
+/* SEQUENCE DRAG */
+.seq-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.seq-item{display:flex;align-items:flex-start;gap:12px;background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:13px 16px;cursor:grab;user-select:none;transition:all .18s}
+.seq-item:active,.seq-item.dragging{opacity:.4;cursor:grabbing}
+.seq-item.drag-over{border-color:var(--GA-red);background:rgba(232,51,58,.05)}
+.seq-item.correct{border-color:var(--green);background:rgba(34,197,94,.04)}
+.seq-item.wrong{border-color:var(--GA-red)}
+.seq-handle{color:var(--gray-dk);flex-shrink:0;padding-top:2px}
+.seq-pos{width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .2s}
+.seq-item.correct .seq-pos{background:var(--green);border-color:var(--green);color:var(--black)}
+.seq-item.wrong .seq-pos{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.seq-icon{font-size:1rem;flex-shrink:0}
+.seq-text{font-size:.9rem;color:var(--gray-lt);line-height:1.55;flex:1}
+/* QUIZ */
+.qz-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.qz-meta span{font-size:.85rem;color:var(--gray)}
+.prog-bar{height:4px;background:var(--black3);border-radius:2px;margin-bottom:28px;overflow:hidden}
+.prog-fill{height:100%;background:var(--GA-red);border-radius:2px;transition:width .4s}
+.quiz-q{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;line-height:1.3;color:#fff;margin-bottom:20px}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.q-opt{background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;font-size:.95rem;color:var(--gray-lt);transition:all .16s;text-align:left;width:100%}
+.q-opt:hover:not(.disabled){border-color:var(--GA-red);color:#fff;background:rgba(232,51,58,.05)}
+.q-opt.correct{border-color:var(--green);background:rgba(34,197,94,.07);color:#fff}
+.q-opt.wrong{border-color:var(--GA-red);background:rgba(232,51,58,.08);color:#fff}
+.q-opt.disabled{cursor:default}
+.opt-k{width:30px;height:30px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .16s}
+.q-opt.correct .opt-k{background:var(--green);border-color:var(--green);color:var(--black)}
+.q-opt.wrong .opt-k{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
+.q-opt:hover:not(.disabled) .opt-k{border-color:var(--GA-red);color:var(--GA-red)}
+.fb-box{display:none;border-radius:var(--r-lg);padding:14px 18px;font-size:.92rem;line-height:1.6;margin-bottom:14px}
+.fb-box.show{display:flex;gap:10px;align-items:flex-start}
+.fb-box.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+.fb-box.bad{background:rgba(232,51,58,.1);border:1px solid rgba(232,51,58,.3);color:#fca5a5}
+/* RESULTS */
+.results-ring{position:relative;width:120px;height:120px;flex-shrink:0}
+.results-ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1}
+.ring-sub{font-size:.7rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.score-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.score-row:last-child{border-bottom:none}
+.score-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.score-bar-wrap{width:80px;height:3px;background:var(--black3);border-radius:2px;flex-shrink:0}
+.score-bar-fill{height:100%;border-radius:2px}
+.tk-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tk-item:last-child{border-bottom:none}
+.tk-num{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--GA-red);flex-shrink:0;line-height:1;padding-top:2px}
+.tk-txt{font-size:.92rem;color:var(--gray-lt);line-height:1.65}
+@keyframes typing{0%{width:0}100%{width:100%}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ga-logo" onclick="nav('intro')">
+    <div class="ga-mark">GA</div>
+    <div class="ga-name">General Assembly<span>Build AI Agents · BAA 8.0</span></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab active" onclick="nav('intro')"   id="t-intro">⬡ Overview</div>
+    <div class="tab"        onclick="nav('types')"   id="t-types">◈ Memory Types</div>
+    <div class="tab"        onclick="nav('sim')"     id="t-sim">▶ Simulator</div>
+    <div class="tab"        onclick="nav('sysdes')"  id="t-sysdes">⌖ System Design</div>
+    <div class="tab"        onclick="nav('rag')"     id="t-rag">✦ Memory ↔ RAG</div>
+    <div class="tab"        onclick="nav('seq')"     id="t-seq">↻ Retrieval Flow</div>
+    <div class="tab"        onclick="nav('build')"   id="t-build">⚙ Implement</div>
+    <div class="tab"        onclick="nav('quiz')"    id="t-quiz">◇ Check</div>
+    <div class="tab"        onclick="nav('results')" id="t-results">★ Results</div>
+  </div>
+  <div class="hd-end"><div class="prog-chip" id="progressChip">0 / 5</div></div>
+</header>
+
+<!-- ══════════════ INTRO ══════════════ -->
+<div class="section active" id="s-intro">
+  <div class="wrap">
+    <div class="a1" style="padding-bottom:40px;border-bottom:1px solid var(--line);margin-bottom:36px">
+      <div class="hero-kicker"><div class="dot"></div>Hands-On Lab &nbsp;·&nbsp; Module 8 &nbsp;·&nbsp; BAA 8.0</div>
+      <h1>Conversational<br/><span class="red">Memory</span></h1>
+      <p class="lead">Without memory, every message is a first introduction. With memory, an agent builds a model of the user across time — referencing what was said, what was decided, and what still matters. In this lab you design, simulate, architect, and implement conversational memory — and learn why it's the same mechanism as RAG.</p>
+      <button class="btn btn-red" onclick="nav('types')">Start Lab →</button>
+    </div>
+    <span class="eyebrow">Learning Objectives</span>
+    <div class="obj-grid a2">
+      <div class="obj-card"><div class="obj-num">01</div><div class="obj-body">Distinguish the three memory layers — buffer, summary, and vector — and explain when each is appropriate.</div></div>
+      <div class="obj-card"><div class="obj-num">02</div><div class="obj-body">Experience the difference between a memoryless agent and a memory-enabled agent through an interactive simulator.</div></div>
+      <div class="obj-card"><div class="obj-num">03</div><div class="obj-body">Design the system architecture for a memory-enabled agent — placing components correctly in a data-flow diagram.</div></div>
+      <div class="obj-card"><div class="obj-num">04</div><div class="obj-body">Explain how conversational memory and RAG share the same core mechanism — and where they diverge.</div></div>
+    </div>
+    <div class="hr"></div>
+    <span class="eyebrow">Your Lab Roadmap</span>
+    <div class="card a3">
+      <div class="roadmap">
+        <div class="rm-item"><div class="rm-dot active" id="dot-types">—</div><div><div class="rm-label active" id="lbl-types">Memory Types Explorer</div><div class="rm-sub">Click Buffer · Summary · Vector to understand each memory layer and when to use it</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-sim">1</div><div><div class="rm-label" id="lbl-sim">Live Chat Simulator</div><div class="rm-sub">Converse with a memoryless vs. memory-enabled agent — side by side — and see exactly what breaks without memory</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-sysdes">2</div><div><div class="rm-label" id="lbl-sysdes">System Design Canvas</div><div class="rm-sub">Drag architecture components into the correct positions in a memory-enabled agent data-flow diagram</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-rag">—</div><div><div class="rm-label" id="lbl-rag">Memory ↔ RAG Connection</div><div class="rm-sub">Explore the shared mechanism — and the critical difference — between conversational memory and RAG</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-seq">3</div><div><div class="rm-label" id="lbl-seq">Retrieval Flow Sequencer</div><div class="rm-sub">Drag 7 steps into the correct order for how a memory-enabled agent retrieves and uses past context</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-build">4</div><div><div class="rm-label" id="lbl-build">Implementation Guide</div><div class="rm-sub">Step-by-step: add conversation memory to a Flowise or Relevance AI prototype</div></div></div>
+        <div class="rm-item"><div class="rm-dot" id="dot-quiz">5</div><div><div class="rm-label" id="lbl-quiz">Knowledge Check</div><div class="rm-sub">7 questions · memory layers, RAG, system design · 70% to pass</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MEMORY TYPES ══════════════ -->
+<div class="section" id="s-types">
+  <div class="wrap">
+    <span class="eyebrow">The Foundation</span>
+    <h2>Three <span class="red">Memory Layers</span></h2>
+    <p class="lead">Every memory-enabled agent uses one or more of these three layers. Click each to explore what it stores, how it works, and when it breaks.</p>
+
+    <div class="mem-pills">
+      <div class="mem-pill" id="mpill-buf" onclick="showMem('buf')" style="border-color:var(--blue);color:var(--blue)">🪣 Buffer Memory</div>
+      <div class="mem-pill" id="mpill-sum" onclick="showMem('sum')" style="border-color:var(--yellow);color:var(--yellow)">📝 Summary Memory</div>
+      <div class="mem-pill" id="mpill-vec" onclick="showMem('vec')" style="border-color:var(--purple);color:var(--purple)">🔮 Vector Memory</div>
+    </div>
+    <div class="mem-detail" id="memDetail" style="background:var(--black2)">
+      <span style="color:var(--gray);font-style:italic">Click a memory type above to explore it.</span>
+    </div>
+
+    <div class="hr"></div>
+    <span class="eyebrow">Lab Activity — Classify Conversation Turns</span>
+    <h2 style="font-size:1.6rem">Memory <span class="red">Classification</span></h2>
+    <p style="font-size:.95rem;color:var(--gray-lt);margin-bottom:20px;line-height:1.7">Each fragment below is a piece of information from a conversation. Drag it to the memory layer best suited to store and retrieve it.</p>
+
+    <div class="drag-pool" id="typesPool">
+      <div class="pool-label">Unclassified conversation fragments</div>
+      <div class="drag-chips" id="typesPoolChips"></div>
+    </div>
+    <div id="typesZones"></div>
+    <details style="margin-bottom:14px"><summary style="font-size:.82rem;color:var(--gray-dk);cursor:pointer">On mobile? Tap to assign</summary>
+      <div id="typesMob" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div></details>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-red" id="typesCheckBtn" onclick="checkTypes()" disabled>Check Classifications</button>
+      <button class="btn btn-ghost" id="typesNextBtn" onclick="markDone('sim');nav('sim')" style="display:none">Next: Chat Simulator →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SIMULATOR ══════════════ -->
+<div class="section" id="s-sim">
+  <div class="wrap">
+    <span class="eyebrow">Section 01 · Interactive Demo</span>
+    <h2>Memory <span class="red">Simulator</span></h2>
+    <p class="lead">Two agents. Same LLM. One has memory — one doesn't. Have a 3-turn conversation about yourself. Watch what happens when you reference something you said earlier.</p>
+
+    <div class="callout callout-tip" style="margin-bottom:20px">
+      <strong>💡 How to use this:</strong> Type messages in either input box. Try saying "My name is [your name], I work in [your field]" first — then follow up with "What's my name?" or "What did I say my job was?" The difference will be immediately clear.
+    </div>
+
+    <div class="sim-wrap" id="simWrap">
+      <div class="sim-panel">
+        <div class="sim-head" style="background:rgba(232,51,58,.12);border:1px solid rgba(232,51,58,.25);border-radius:var(--r-lg) var(--r-lg) 0 0">
+          <span class="sim-icon">🚫</span>
+          <div><div class="sim-title" style="color:var(--GA-red)">No Memory</div><div style="font-size:.7rem;color:var(--gray-dk);margin-top:1px">Stateless — forgets after every message</div></div>
+        </div>
+        <div class="sim-body" id="noMemChat"><div class="bubble-label">CONVERSATION</div></div>
+        <div class="sim-ctrl">
+          <input class="sim-input" id="noMemInput" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendSim('no')"/>
+          <button class="sim-send" onclick="sendSim('no')">Send</button>
+        </div>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-head" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:var(--r-lg) var(--r-lg) 0 0">
+          <span class="sim-icon">🧠</span>
+          <div><div class="sim-title" style="color:var(--green)">With Buffer Memory</div><div style="font-size:.7rem;color:var(--gray-dk);margin-top:1px">Retains full conversation window</div></div>
+        </div>
+        <div class="sim-body" id="memChat"><div class="bubble-label">CONVERSATION</div></div>
+        <div class="sim-ctrl">
+          <input class="sim-input" id="memInput" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendSim('mem')"/>
+          <button class="sim-send" onclick="sendSim('mem')">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="simInsight" style="display:none" class="callout callout-success">
+      <strong>✓ You've seen the difference.</strong> Notice how the memory agent can reference your earlier statements, while the memoryless agent treats every message as if it's the first. This is not just a UX improvement — it's a correctness requirement for agents that need to reason across a task.
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="nav('sysdes')">Next: System Design →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SYSTEM DESIGN ══════════════ -->
+<div class="section" id="s-sysdes">
+  <div class="wrap">
+    <span class="eyebrow">Section 02 · Systems Design Lab</span>
+    <h2>Architecture <span class="red">Canvas</span></h2>
+    <p class="lead">A memory-enabled agent is a system — not just a prompt. Drag each component into its correct position in the data-flow diagram. Each slot has one right answer.</p>
+
+    <div class="callout callout-tip" style="margin-bottom:20px">
+      <strong>🔧 Systems Design Thinking:</strong> Every box in this diagram answers a question: <em>Who stores it? Who retrieves it? Who transforms it? Who decides what to do with it?</em> Think about the data's journey from user mouth to agent response.
+    </div>
+
+    <span style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-dk);display:block;margin-bottom:10px">Component Pool — drag to the correct slot in the diagram</span>
+    <div class="arch-chip-pool" id="archPool"></div>
+
+    <div class="arch-canvas" id="archDiagram"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn btn-red" id="archCheckBtn" onclick="checkArch()" disabled>Check Architecture</button>
+      <button class="btn btn-ghost" id="archNextBtn" onclick="markDone('sysdes');nav('rag')" style="display:none">Next: Memory ↔ RAG →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RAG CONNECTION ══════════════ -->
+<div class="section" id="s-rag">
+  <div class="wrap">
+    <span class="eyebrow">The Big Idea</span>
+    <h2>Memory <span class="red">↔ RAG</span></h2>
+    <p class="lead">Here's a secret most courses skip: <strong style="color:#fff">conversational memory and RAG are the same core mechanism</strong> — just applied to different knowledge sources. Understanding why this is true unlocks both concepts.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
+      <div style="background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.25);border-radius:var(--r-lg);padding:22px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:12px">Conversational Memory</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.88rem;line-height:1.6">
+          <div><span style="color:var(--teal);font-weight:700">Knowledge base:</span><span style="color:var(--gray-lt)"> Past conversation turns</span></div>
+          <div><span style="color:var(--teal);font-weight:700">Query:</span><span style="color:var(--gray-lt)"> The user's current message</span></div>
+          <div><span style="color:var(--teal);font-weight:700">Retrieval:</span><span style="color:var(--gray-lt)"> Find relevant prior turns by recency or semantic similarity</span></div>
+          <div><span style="color:var(--teal);font-weight:700">Augmentation:</span><span style="color:var(--gray-lt)"> Inject retrieved turns into the LLM context before generating</span></div>
+          <div><span style="color:var(--teal);font-weight:700">Generation:</span><span style="color:var(--gray-lt)"> LLM produces a contextually coherent response</span></div>
+        </div>
+      </div>
+      <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:var(--r-lg);padding:22px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px">RAG (Retrieval-Augmented Generation)</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.88rem;line-height:1.6">
+          <div><span style="color:var(--purple);font-weight:700">Knowledge base:</span><span style="color:var(--gray-lt)"> External documents, databases, websites</span></div>
+          <div><span style="color:var(--purple);font-weight:700">Query:</span><span style="color:var(--gray-lt)"> The user's current message</span></div>
+          <div><span style="color:var(--purple);font-weight:700">Retrieval:</span><span style="color:var(--gray-lt)"> Find relevant documents by semantic similarity (embeddings)</span></div>
+          <div><span style="color:var(--purple);font-weight:700">Augmentation:</span><span style="color:var(--gray-lt)"> Inject retrieved chunks into the LLM context before generating</span></div>
+          <div><span style="color:var(--purple);font-weight:700">Generation:</span><span style="color:var(--gray-lt)"> LLM produces a factually grounded response</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-rag" style="margin-bottom:24px">
+      <strong>🔮 The shared pattern:</strong> Both are <strong>Retrieve → Augment → Generate</strong>. The only difference is what's in the knowledge base — <em>your own conversation history</em> vs. <em>external documents</em>. A production agent often uses both at the same time: conversational memory for who the user is and what they've said, RAG for domain knowledge the LLM wasn't trained on.
+    </div>
+
+    <div class="hr"></div>
+    <span class="eyebrow">Where They Diverge</span>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+      <div style="background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start">
+        <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-dk)">Dimension</div>
+        <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)">Conversational Memory</div>
+        <div style="font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple)">RAG</div>
+      </div>
+      ${[
+        ['Knowledge freshness','Grows during the session — dynamic','Static corpus, updated offline'],
+        ['Source of truth','The user themselves','External documents or databases'],
+        ['Retrieval strategy','Recency-weighted OR semantic similarity','Semantic similarity (cosine distance)'],
+        ['Forgetting','Buffer fills up → oldest turns dropped or summarized','Corpus doesn\'t change unless re-indexed'],
+        ['Privacy risk','Contains PII — requires careful handling','Usually impersonal — lower PII risk'],
+        ['Scale','Small (one conversation)','Large (millions of documents)'],
+      ].map(([dim,mem,rag])=>`
+      <div style="background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start">
+        <div style="font-size:.88rem;font-weight:700;color:#fff">${dim}</div>
+        <div style="font-size:.85rem;color:var(--gray-lt);line-height:1.55">${mem}</div>
+        <div style="font-size:.85rem;color:var(--gray-lt);line-height:1.55">${rag}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--purple);padding:20px 22px;margin-bottom:24px">
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:8px">System Design Implication</div>
+      <p style="font-size:.92rem;color:var(--gray-lt);line-height:1.75">
+        When you design a production agent, you typically wire up <strong style="color:#fff">two vector stores in parallel</strong>: one for the conversation history (short-lived, per-session, PII-aware) and one for the domain knowledge base (persistent, shared, RAG-style). The LLM's context window gets injected with retrieved chunks from both before generating — the agent "knows who it's talking to" AND "knows its domain." This is called <strong style="color:#fff">Hybrid Memory Architecture</strong>.
+      </p>
+    </div>
+
+    <button class="btn btn-red" onclick="nav('seq')">Next: Retrieval Flow Sequencer →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SEQUENCER ══════════════ -->
+<div class="section" id="s-seq">
+  <div class="wrap">
+    <span class="eyebrow">Section 03 · Lab Activity</span>
+    <h2>Retrieval Flow <span class="red">Sequencer</span></h2>
+    <p class="lead">Memory doesn't just "happen" — it's an 8-step pipeline. Drag the steps into the correct execution order, from the moment the user sends a message to the moment the agent replies.</p>
+
+    <div class="callout callout-tip" style="margin-bottom:20px">
+      <strong>💡 Hint:</strong> Think RAG: first you receive, then you retrieve, then you inject, then you generate. But before any retrieval can happen — the history must have been stored and embedded in the first place.
+    </div>
+
+    <div class="seq-list" id="seqList"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-red" id="seqCheckBtn" onclick="checkSeq()">Check Sequence</button>
+      <button class="btn btn-ghost" id="seqNextBtn" onclick="markDone('seq');nav('build')" style="display:none">Next: Implement →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BUILD / IMPLEMENT ══════════════ -->
+<div class="section" id="s-build">
+  <div class="wrap">
+    <span class="eyebrow">Section 04 · Implementation</span>
+    <h2>Implement <span class="red">Memory</span></h2>
+    <p class="lead">Pick your platform and follow the guide. Each path adds real conversation memory to a working prototype agent.</p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+      <button class="btn-ghost btn" id="pbtn-flowise" onclick="showPlatform('flowise')" style="border-color:var(--blue);color:var(--blue)">🌊 Flowise</button>
+      <button class="btn-ghost btn" id="pbtn-relevance" onclick="showPlatform('relevance')">🧬 Relevance AI</button>
+      <button class="btn-ghost btn" id="pbtn-code" onclick="showPlatform('code')">💻 Python / LangChain</button>
+    </div>
+
+    <div id="platformGuide"></div>
+
+    <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-ghost" id="buildNextBtn" onclick="markDone('build');nav('quiz')" style="display:none">Go to Knowledge Check →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div class="section" id="s-quiz">
+  <div class="wrap">
+    <span class="eyebrow">Section 05</span>
+    <h2>Knowledge <span class="red">Check</span></h2>
+    <p class="lead">7 questions covering memory types, system design, and the RAG connection. 70% to pass.</p>
+    <div id="quizActive">
+      <div class="qz-meta"><span id="qMeta">Question 1 of 7</span><span id="qScoreTxt">Score: 0 / 0</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="qProg" style="width:0%"></div></div>
+      <div class="card card-rb">
+        <div class="quiz-q" id="quizQ"></div>
+        <div class="q-opts" id="quizOpts"></div>
+        <div class="fb-box" id="quizFB"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-red" id="qNextBtn" onclick="nextQ()" style="display:none">Continue →</button>
+        </div>
+      </div>
+    </div>
+    <div id="quizDone" style="display:none">
+      <div class="card card-rb">
+        <h3 style="font-size:1.2rem;margin-bottom:8px">Quiz Complete <span id="qBadge"></span></h3>
+        <p style="font-size:.95rem;color:var(--gray-lt);margin-bottom:20px;line-height:1.7" id="qMsg"></p>
+        <button class="btn btn-green" onclick="markDone('quiz');buildResults();nav('results')">See Your Results →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RESULTS ══════════════ -->
+<div class="section" id="s-results">
+  <div class="wrap">
+    <span class="eyebrow">Lab Debrief</span>
+    <h2>Lab <span class="red">Complete</span></h2>
+    <div id="resultsBody"></div>
+  </div>
+</div>
+
+<script>
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+const ALL_SECS=['intro','types','sim','sysdes','rag','seq','build','quiz','results'];
+let completed=new Set(), sectionScores={};
+function nav(id){
+  ALL_SECS.forEach(s=>{
+    document.getElementById('s-'+s).classList.remove('active');
+    const t=document.getElementById('t-'+s);if(t)t.classList.remove('active');
+  });
+  document.getElementById('s-'+id).classList.add('active');
+  const t=document.getElementById('t-'+id);if(t)t.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='types'&&!typesBuilt)buildTypes();
+  if(id==='sysdes'&&!archBuilt)buildArch();
+  if(id==='seq'&&!seqBuilt)buildSeq();
+  if(id==='quiz'&&!quizStarted)initQuiz();
+}
+function markDone(key){
+  completed.add(key);
+  document.getElementById('progressChip').textContent=completed.size+' / 5';
+  const d=document.getElementById('dot-'+key),l=document.getElementById('lbl-'+key);
+  if(d){d.className='rm-dot done';d.textContent='✓';}
+  if(l)l.className='rm-label done';
+}
+
+// ─── MEMORY TYPE EXPLORER ─────────────────────────────────────────────────────
+const MEM_DETAIL={
+  buf:{
+    color:'var(--blue)',bg:'rgba(59,130,246,.07)',border:'rgba(59,130,246,.25)',
+    html:`<strong style="color:var(--blue)">BUFFER MEMORY — The full transcript, verbatim</strong><br/><br/>
+Buffer memory stores every conversation turn — user and assistant — in sequence, exactly as written. It's passed wholesale into the LLM's context window on every new message.<br/><br/>
+<strong>Analogy:</strong> A live transcript sitting on the desk between you and the AI. Both parties can see everything said since the conversation started.<br/><br/>
+<strong>✓ Best for:</strong> Short conversations (2–15 turns), tasks where full precision matters, any scenario where the exact wording of a prior message may be referenced.<br/>
+<strong>✗ Breaks when:</strong> The conversation exceeds the context window limit (typically 8k–128k tokens). Older turns are truncated — and may take critical context with them.<br/><br/>
+<span style="color:var(--blue)">Implemented as: A running list of <code style="background:var(--black3);padding:2px 6px;border-radius:3px">{role, content}</code> objects prepended to every new API call.</span>`
+  },
+  sum:{
+    color:'var(--yellow)',bg:'rgba(245,197,24,.07)',border:'rgba(245,197,24,.25)',
+    html:`<strong style="color:var(--yellow)">SUMMARY MEMORY — A compressed, evolving recap</strong><br/><br/>
+Summary memory periodically compresses older turns into a running summary while keeping only the most recent raw turns in the buffer. The agent "reads" its own summary at the top of every context window.<br/><br/>
+<strong>Analogy:</strong> Meeting minutes. The detailed discussion is archived; what gets passed forward is the key decisions and context from the last page of notes.<br/><br/>
+<strong>✓ Best for:</strong> Long-running sessions (hours, days), customer service agents, tutors, coaching agents — any context that accumulates but doesn't need full verbatim recall.<br/>
+<strong>✗ Breaks when:</strong> The summarization loses nuance that turns out to matter later ("the user mentioned they were allergic to X in turn 3" — compressed away, dangerous). Also when the summary itself grows so long it fills the window.<br/><br/>
+<span style="color:var(--yellow)">Implemented as: An LLM call that compresses old buffer into a summary text, then replaces the old turns with the summary in the context.</span>`
+  },
+  vec:{
+    color:'var(--purple)',bg:'rgba(168,85,247,.07)',border:'rgba(168,85,247,.25)',
+    html:`<strong style="color:var(--purple)">VECTOR MEMORY — Semantic search across all past turns</strong><br/><br/>
+Vector memory embeds every conversation turn into a vector and stores it in a vector database. On each new message, the agent queries the vector DB for the <em>most semantically relevant</em> prior turns — not necessarily the most recent ones — and injects only those into context.<br/><br/>
+<strong>Analogy:</strong> A personal CRM. You don't read every email ever sent to a client — you search for the most relevant ones before a call and skim only those.<br/><br/>
+<strong>✓ Best for:</strong> Very long relationships (weeks, months), personalization, agents that need to recall a specific detail from a much earlier session ("you mentioned your budget was $50k in January").<br/>
+<strong>✗ Breaks when:</strong> The query isn't specific enough to retrieve the right turn — semantic similarity can miss exact facts. Also adds latency (embedding + vector search on every turn).<br/><br/>
+<span style="color:var(--purple)">Implemented as: Embed each turn → upsert to Pinecone/Chroma/Weaviate → on new message, embed query → cosine similarity search → inject top-k results.</span><br/><br/>
+<strong style="color:#fff">🔮 This is exactly RAG — applied to your own conversation history.</strong>`
+  }
+};
+function showMem(k){
+  const m=MEM_DETAIL[k];
+  const d=document.getElementById('memDetail');
+  d.style.background=m.bg; d.style.borderColor=m.border; d.style.color='var(--gray-lt)';
+  d.innerHTML=m.html;
+}
+
+// ─── TYPES DRAG/DROP ─────────────────────────────────────────────────────────
+const TYPES_ZONES=[
+  {id:'buffer',  label:'Buffer Memory',  icon:'🪣',color:'#3b82f6',bg:'rgba(59,130,246,.14)', desc:'Full verbatim transcript — recency order'},
+  {id:'summary', label:'Summary Memory', icon:'📝',color:'#f5c518',bg:'rgba(245,197,24,.12)', desc:'Compressed recaps — older turns collapsed'},
+  {id:'vector',  label:'Vector Memory',  icon:'🔮',color:'#a855f7',bg:'rgba(168,85,247,.14)', desc:'Embeddings — retrieved by semantic relevance'},
+];
+const TYPES_ITEMS=[
+  {id:'ti1', text:'"My budget is $50k — mentioned 6 sessions ago"',                        answer:'vector'},
+  {id:'ti2', text:'The last 5 turns of the current conversation, exact wording',          answer:'buffer'},
+  {id:'ti3', text:'"In previous sessions user prefers bullet-point summaries"',            answer:'vector'},
+  {id:'ti4', text:'A running paragraph: "So far the user has asked about pricing, decided on the Pro plan, and flagged a concern about onboarding"', answer:'summary'},
+  {id:'ti5', text:'The exact question the user asked two messages ago',                    answer:'buffer'},
+  {id:'ti6', text:'"Key decision from week 3: user wants API-first architecture"',         answer:'vector'},
+  {id:'ti7', text:'A condensed recap of the first 40 turns from a 2-hour session',        answer:'summary'},
+  {id:'ti8', text:'Every message from the last 10 minutes, timestamped in order',         answer:'buffer'},
+  {id:'ti9', text:'An embedding of "user is allergic to shellfish" stored for later recall', answer:'vector'},
+].sort(()=>Math.random()-.5);
+
+let typesBuilt=false, typesP={}, typesChecked=false;
+function buildTypes(){
+  typesBuilt=true;
+  const pool=document.getElementById('typesPoolChips');
+  const mob=document.getElementById('typesMob');
+  TYPES_ITEMS.forEach(item=>{
+    pool.appendChild(mkChip('tc-',item));
+    const row=document.createElement('div');row.style.cssText='padding:10px;background:var(--black2);border-radius:4px;border:1px solid var(--line)';
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:.88rem;color:var(--gray-lt);margin-bottom:6px;line-height:1.4';lbl.textContent=item.text;
+    const btns=document.createElement('div');btns.style.cssText='display:flex;gap:4px;flex-wrap:wrap';
+    TYPES_ZONES.forEach(z=>{const b=document.createElement('button');b.style.cssText=`padding:3px 8px;border-radius:3px;border:1.5px solid ${z.color};background:transparent;font-size:.75rem;cursor:pointer;color:${z.color};font-weight:700`;b.textContent=z.label;b.addEventListener('click',()=>mobAssign('types',item.id,z.id));btns.appendChild(b);});
+    row.appendChild(lbl);row.appendChild(btns);mob.appendChild(row);
+  });
+  const container=document.getElementById('typesZones');
+  TYPES_ZONES.forEach(z=>{
+    const zone=document.createElement('div');zone.className='drop-zone';zone.style.border=`1px solid ${z.color}30`;
+    const head=document.createElement('div');head.className='dz-head';head.style.background=z.bg;
+    head.innerHTML=`<span style="font-size:1.1rem">${z.icon}</span><div><div class="dz-title" style="color:${z.color}">${z.label}</div><div class="dz-sub">${z.desc}</div></div>`;
+    const body=mkDropBody('tdz-'+z.id,'types',z,typesP,()=>typesChecked,TYPES_ITEMS,item=>mkChip('tc-',item),()=>updateTypesBtn());
+    zone.appendChild(head);zone.appendChild(body);container.appendChild(zone);
+  });
+}
+function mkChip(prefix,item){
+  const c=document.createElement('div');c.className='drag-chip';c.id=prefix+item.id;c.textContent=item.text;c.setAttribute('draggable','true');
+  c.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',item.id));
+  return c;
+}
+function mkDropBody(bodyId,ns,zone,placements,isLocked,items,chipFn,updateFn){
+  const body=document.createElement('div');body.className='dz-body';body.id=bodyId;
+  body.innerHTML='<span style="font-size:.78rem;color:var(--gray-dk);font-style:italic;width:100%;text-align:center;padding:10px 0">Drop here</span>';
+  body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('over');});
+  body.addEventListener('dragleave',()=>body.classList.remove('over'));
+  body.addEventListener('drop',e=>{
+    e.preventDefault();body.classList.remove('over');if(isLocked())return;
+    const id=e.dataTransfer.getData('text/plain');
+    placements[id]=zone.id;
+    const chip=document.getElementById((ns==='types'?'tc-':'sc-')+id);if(chip)chip.parentNode.removeChild(chip);
+    const emp=body.querySelector('span[style*="italic"]');if(emp)emp.remove();
+    body.appendChild(chipFn(items.find(x=>x.id===id)));updateFn();
+  });
+  return body;
+}
+function mobAssign(ns,itemId,zoneId){
+  const placements=ns==='types'?typesP:{};
+  placements[itemId]=zoneId;
+  const prefix=ns==='types'?'tc-':'sc-';
+  const chip=document.getElementById(prefix+itemId);if(chip)chip.parentNode.removeChild(chip);
+  const body=document.getElementById((ns==='types'?'tdz-':'sdz-')+zoneId);
+  if(body){const emp=body.querySelector('span[style*="italic"]');if(emp)emp.remove();body.appendChild(mkChip(prefix,TYPES_ITEMS.find(x=>x.id===itemId)));}
+  if(ns==='types')updateTypesBtn();
+}
+function updateTypesBtn(){document.getElementById('typesCheckBtn').disabled=!TYPES_ITEMS.every(i=>typesP[i.id]);}
+function checkTypes(){
+  typesChecked=true;let correct=0;
+  TYPES_ITEMS.forEach(item=>{
+    const chip=document.getElementById('tc-'+item.id);if(!chip)return;
+    if(typesP[item.id]===item.answer){chip.classList.add('correct');correct++;}else chip.classList.add('wrong');
+  });
+  sectionScores.types={earned:correct,possible:TYPES_ITEMS.length};
+  document.getElementById('typesCheckBtn').style.display='none';
+  document.getElementById('typesNextBtn').style.display='inline-flex';
+}
+
+// ─── CHAT SIMULATOR ───────────────────────────────────────────────────────────
+let noMemHistory=[], memHistory=[], simTurns=0;
+const MEMORY_RESPONSES={
+  default_no:[
+    "Hi there! I'm ready to help. What would you like to discuss?",
+    "I understand. Is there anything specific you'd like to know?",
+    "I'm not sure I have enough context to answer that. Could you clarify?",
+    "I don't have any information about that from our conversation. Could you remind me?",
+    "I'm sorry, I don't have context about what you're referring to. This appears to be the start of our conversation."
+  ],
+  recall_fail:"I don't have any record of you sharing that information. This is the beginning of our conversation as far as I can tell. Could you remind me?",
+  recall_success_name:(name)=>`Yes! You told me your name is <strong>${name}</strong> earlier in our conversation. I've been keeping track.`,
+  recall_success_job:(job)=>`You mentioned earlier that you work in <strong>${job}</strong>. I noted that when you told me.`,
+  recall_success_generic:(what)=>`You mentioned that earlier: "${what}". I remembered it from our conversation history.`,
+};
+
+let extractedName='', extractedJob='', extractedFacts=[];
+
+function sendSim(panel){
+  const inputEl=document.getElementById(panel==='no'?'noMemInput':'memInput');
+  const text=inputEl.value.trim();if(!text)return;
+  inputEl.value='';
+  const chatEl=document.getElementById(panel==='no'?'noMemChat':'memChat');
+  // user bubble
+  addBubble(chatEl,'user',text);
+  // extract facts
+  if(panel==='mem'){
+    const nameMatch=text.match(/(?:my name is|i(?:'m| am)(?: called)?)\s+([A-Za-z]+)/i);
+    if(nameMatch)extractedName=nameMatch[1];
+    const jobMatch=text.match(/(?:i work (?:in|as|at)|my (?:job|role|title) is)\s+(.+?)(?:\.|,|$)/i);
+    if(jobMatch)extractedJob=jobMatch[1];
+    if(text.length>20&&!nameMatch&&!jobMatch)extractedFacts.push(text);
+  }
+  // generate response
+  setTimeout(()=>{
+    let response='', isHighlight=false, isFail=false;
+    if(panel==='no'){
+      const lc=text.toLowerCase();
+      if(lc.includes("what's my name")||lc.includes("what is my name")||lc.includes("my name")||lc.includes("do you know who i am")){
+        response=MEMORY_RESPONSES.recall_fail;isFail=true;
+      } else if(lc.includes("what did i say")||lc.includes("what was my")||lc.includes("remember when")||lc.includes("earlier")||lc.includes("before")){
+        response=MEMORY_RESPONSES.recall_fail;isFail=true;
+      } else {
+        response=MEMORY_RESPONSES.default_no[Math.min(simTurns,MEMORY_RESPONSES.default_no.length-1)];
+      }
+    } else {
+      const lc=text.toLowerCase();
+      if((lc.includes("what's my name")||lc.includes("what is my name"))&&extractedName){
+        response=MEMORY_RESPONSES.recall_success_name(extractedName);isHighlight=true;
+      } else if((lc.includes("what do i do")||lc.includes("what's my job")||lc.includes("what is my job")||lc.includes("my job")||lc.includes("what do i work"))&&extractedJob){
+        response=MEMORY_RESPONSES.recall_success_job(extractedJob);isHighlight=true;
+      } else if(lc.includes("what did i say")||lc.includes("do you remember")||lc.includes("earlier")){
+        if(extractedFacts.length>0){response=MEMORY_RESPONSES.recall_success_generic(extractedFacts[extractedFacts.length-1]);isHighlight=true;}
+        else if(extractedName){response=`Based on our conversation, you've told me your name is <strong>${extractedName}</strong>${extractedJob?' and that you work in '+extractedJob:''}.`;isHighlight=true;}
+        else{response="I'm tracking our whole conversation, but you haven't shared any specific facts yet. Tell me about yourself and I'll remember it!";}
+      } else if(lc.includes("nice to meet you")||lc.includes("hello")||lc.includes("hi ")||text==="hi"){
+        response=extractedName?`Nice to meet you too, <strong>${extractedName}</strong>!`:"Nice to meet you! Tell me your name and a bit about yourself — I'll remember it for the rest of our conversation.";
+      } else {
+        const ctx=extractedName?` (I know you're ${extractedName})`:'';
+        response=`Got it${ctx}. I'm keeping track of everything you share. Feel free to ask me what you've told me at any point.`;
+      }
+    }
+    addBubble(chatEl,'agent',response,isHighlight,isFail);
+    simTurns++;
+    if(simTurns>=2&&!document.getElementById('simInsight').style.display!=='none'){
+      document.getElementById('simInsight').style.display='block';
+      markDone('sim');
+    }
+  },600);
+}
+
+function addBubble(chatEl,role,text,highlight,fail){
+  const b=document.createElement('div');
+  b.className=`chat-bubble ${role==='user'?'bubble-user':highlight?'bubble-agent highlight':fail?'bubble-agent fail':'bubble-agent'}`;
+  b.innerHTML=`<div class="bubble-label">${role==='user'?'YOU':'AGENT'}</div>${text}`;
+  chatEl.appendChild(b);
+  chatEl.scrollTop=chatEl.scrollHeight;
+}
+
+// ─── ARCHITECTURE CANVAS ─────────────────────────────────────────────────────
+const ARCH_CHIPS=[
+  {id:'ac1',icon:'👤',label:'User Input',    sub:'Current message',   color:'#e8333a',bg:'rgba(232,51,58,.15)'},
+  {id:'ac2',icon:'🔢',label:'Embedding\nModel',  sub:'text → vector',     color:'#3b82f6',bg:'rgba(59,130,246,.15)'},
+  {id:'ac3',icon:'🗄️',label:'Vector Store',  sub:'store + retrieve',   color:'#a855f7',bg:'rgba(168,85,247,.15)'},
+  {id:'ac4',icon:'📋',label:'Context\nBuilder',  sub:'inject retrieved',  color:'#f5c518',bg:'rgba(245,197,24,.15)'},
+  {id:'ac5',icon:'🤖',label:'LLM',           sub:'generate response',  color:'#22c55e',bg:'rgba(34,197,94,.15)'},
+  {id:'ac6',icon:'💬',label:'Agent Reply',   sub:'output to user',     color:'#14b8a6',bg:'rgba(20,184,166,.15)'},
+  {id:'ac7',icon:'🔍',label:'Retrieval\nEngine', sub:'similarity search',  color:'#f97316',bg:'rgba(249,115,22,.15)'},
+];
+
+// Slots: 7 positions in the diagram with correct answers
+const ARCH_SLOTS=[
+  {id:'s1',label:'Step 1',hint:'Who starts\nit all?',   ans:'ac1', row:0},
+  {id:'s2',label:'Step 2',hint:'Encode\nthe query',     ans:'ac2', row:0},
+  {id:'s3',label:'Step 3',hint:'Find\nrelevant turns',  ans:'ac7', row:0},
+  {id:'s4',label:'Step 4',hint:'Where history\nlives',  ans:'ac3', row:1},
+  {id:'s5',label:'Step 5',hint:'Assemble\nthe prompt',  ans:'ac4', row:1},
+  {id:'s6',label:'Step 6',hint:'Think &\ngenerate',     ans:'ac5', row:1},
+  {id:'s7',label:'Step 7',hint:'Deliver\nresponse',     ans:'ac6', row:1},
+];
+
+let archBuilt=false, archPlacements={}, archChecked=false;
+let draggingArchChip=null;
+
+function buildArch(){
+  archBuilt=true;
+  const pool=document.getElementById('archPool');
+  ARCH_CHIPS.forEach(chip=>{
+    const el=document.createElement('div');el.className='arch-chip';el.id='achip-'+chip.id;
+    el.innerHTML=`<span>${chip.icon}</span><span>${chip.label.replace('\n',' ')}</span>`;
+    el.setAttribute('draggable','true');
+    el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',chip.id);draggingArchChip=chip.id;});
+    el.addEventListener('touchstart',()=>{draggingArchChip=chip.id;},{ passive:true });
+    pool.appendChild(el);
+  });
+
+  const diagram=document.getElementById('archDiagram');
+  diagram.innerHTML=`<div class="arch-title">Memory-Enabled Agent — Data Flow</div>`;
+
+  // Row labels
+  const rows=[
+    {label:'On New Message →', slots:['s1','s2','s3']},
+    {label:'Retrieve → Augment → Generate →', slots:['s4','s5','s6','s7']},
+  ];
+
+  rows.forEach(row=>{
+    const rowDiv=document.createElement('div');
+    rowDiv.style.cssText='margin-bottom:20px';
+    const rowLabel=document.createElement('div');
+    rowLabel.style.cssText='font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:8px';
+    rowLabel.textContent=row.label;
+    rowDiv.appendChild(rowLabel);
+
+    const flexRow=document.createElement('div');flexRow.style.cssText='display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+
+    row.slots.forEach((slotId,i)=>{
+      const slot=ARCH_SLOTS.find(s=>s.id===slotId);
+      const slotEl=document.createElement('div');
+      slotEl.className='arch-drop-slot';slotEl.id='slot-'+slotId;
+      slotEl.innerHTML=`<div class="slot-placeholder">${slot.hint.replace('\n','<br/>')}</div>`;
+      slotEl.addEventListener('dragover',e=>{e.preventDefault();slotEl.classList.add('over');});
+      slotEl.addEventListener('dragleave',()=>slotEl.classList.remove('over'));
+      slotEl.addEventListener('drop',e=>{
+        e.preventDefault();slotEl.classList.remove('over');
+        if(archChecked)return;
+        const chipId=e.dataTransfer.getData('text/plain');
+        placeArchChip(slotId,chipId);
+      });
+      slotEl.addEventListener('click',()=>{
+        if(archChecked||!draggingArchChip)return;
+        placeArchChip(slotId,draggingArchChip);draggingArchChip=null;
+      });
+      flexRow.appendChild(slotEl);
+      if(i<row.slots.length-1){
+        const arr=document.createElement('span');arr.className='arch-arrow';arr.textContent='→';flexRow.appendChild(arr);
+      }
+    });
+    rowDiv.appendChild(flexRow);
+    diagram.appendChild(rowDiv);
+  });
+
+  // The vector store is below row 0 — add a note
+  const note=document.createElement('div');
+  note.style.cssText='font-size:.78rem;color:var(--gray-dk);text-align:center;padding:8px;border-top:1px solid var(--line);margin-top:8px';
+  note.innerHTML='↕ The Vector Store is shared between both rows — it stores history from past turns AND returns relevant history for new turns';
+  diagram.appendChild(note);
+}
+
+function placeArchChip(slotId,chipId){
+  // Remove from current slot if placed elsewhere
+  Object.keys(archPlacements).forEach(sid=>{
+    if(archPlacements[sid]===chipId&&sid!==slotId){
+      delete archPlacements[sid];
+      const prevSlot=document.getElementById('slot-'+sid);
+      const slot=ARCH_SLOTS.find(s=>s.id===sid);
+      prevSlot.innerHTML=`<div class="slot-placeholder">${slot.hint.replace('\n','<br/>')}</div>`;
+      prevSlot.className='arch-drop-slot';
+    }
+  });
+  // Remove any existing chip in target slot
+  const oldChip=archPlacements[slotId];
+  if(oldChip){
+    const el=document.getElementById('achip-'+oldChip);
+    if(el)el.style.display='';
+    document.getElementById('archPool').appendChild(el||document.createElement('div'));
+  }
+  archPlacements[slotId]=chipId;
+  const chip=ARCH_CHIPS.find(c=>c.id===chipId);
+  const slotEl=document.getElementById('slot-'+slotId);
+  slotEl.classList.add('filled');
+  slotEl.innerHTML=`<div style="text-align:center"><span style="font-size:1.4rem">${chip.icon}</span><div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:${chip.color};margin-top:4px">${chip.label.replace('\n','<br/>')}</div></div>`;
+  const poolChip=document.getElementById('achip-'+chipId);
+  if(poolChip)poolChip.style.display='none';
+  updateArchBtn();
+}
+
+function updateArchBtn(){
+  document.getElementById('archCheckBtn').disabled=Object.keys(archPlacements).length<ARCH_SLOTS.length;
+}
+
+function checkArch(){
+  archChecked=true;let correct=0;
+  ARCH_SLOTS.forEach(slot=>{
+    const slotEl=document.getElementById('slot-'+slot.id);
+    const placed=archPlacements[slot.id];
+    if(placed===slot.ans){slotEl.classList.add('correct');correct++;}
+    else slotEl.classList.add('wrong');
+  });
+  sectionScores.sysdes={earned:correct,possible:ARCH_SLOTS.length};
+  document.getElementById('archCheckBtn').style.display='none';
+  document.getElementById('archNextBtn').style.display='inline-flex';
+}
+
+// ─── SEQUENCER ────────────────────────────────────────────────────────────────
+const SEQ_CORRECT=[
+  {icon:'👤',text:'User sends a new message — the agent receives the raw input text'},
+  {icon:'🔢',text:'The new message is converted to a vector embedding by the embedding model'},
+  {icon:'🔍',text:'The vector store is queried: find the top-k most semantically similar past turns'},
+  {icon:'📋',text:'Retrieved turns are injected into the LLM prompt as "remembered context"'},
+  {icon:'🤖',text:'The LLM reads: system prompt + retrieved memory + recent buffer + new message'},
+  {icon:'💬',text:'The LLM generates a response that references prior context coherently'},
+  {icon:'🔢',text:'The new turn (user message + agent reply) is embedded and stored in the vector store for future retrieval'},
+  {icon:'🧹',text:'If buffer is over limit, oldest raw turns are summarized and compressed into summary memory'},
+];
+let seqBuilt=false, seqChecked=false;
+let seqOrder=[...SEQ_CORRECT].sort(()=>Math.random()-.5);
+function buildSeq(){
+  seqBuilt=true;
+  const list=document.getElementById('seqList');
+  seqOrder.forEach((step,i)=>{
+    const item=document.createElement('div');item.className='seq-item';item.dataset.idx=i;item.setAttribute('draggable','true');
+    item.innerHTML=`<span class="seq-handle">⠿</span><div class="seq-pos">${i+1}</div><span class="seq-icon">${step.icon}</span><div class="seq-text">${step.text}</div>`;
+    item.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',i);item.classList.add('dragging');});
+    item.addEventListener('dragend',()=>{item.classList.remove('dragging');document.querySelectorAll('.seq-item').forEach(x=>x.classList.remove('drag-over'));});
+    item.addEventListener('dragover',e=>{e.preventDefault();if(!seqChecked)item.classList.add('drag-over');});
+    item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
+    item.addEventListener('drop',e=>{
+      e.preventDefault();item.classList.remove('drag-over');if(seqChecked)return;
+      const fromIdx=parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx=parseInt(item.dataset.idx);
+      if(fromIdx===toIdx)return;
+      [seqOrder[fromIdx],seqOrder[toIdx]]=[seqOrder[toIdx],seqOrder[fromIdx]];
+      rebuildSeq();
+    });
+    list.appendChild(item);
+  });
+}
+function rebuildSeq(){const l=document.getElementById('seqList');l.innerHTML='';seqBuilt=false;buildSeq();}
+function checkSeq(){
+  seqChecked=true;let correct=0;
+  const items=document.querySelectorAll('.seq-item');
+  items.forEach((item,i)=>{
+    const idx=parseInt(item.dataset.idx);
+    if(seqOrder[idx].text===SEQ_CORRECT[i].text){item.classList.add('correct');correct++;}
+    else item.classList.add('wrong');
+    item.querySelector('.seq-pos').textContent=i+1;
+  });
+  sectionScores.seq={earned:correct,possible:SEQ_CORRECT.length};
+  document.getElementById('seqCheckBtn').style.display='none';
+  document.getElementById('seqNextBtn').style.display='inline-flex';
+}
+
+// ─── PLATFORM GUIDE ──────────────────────────────────────────────────────────
+const PLATFORM_GUIDES={
+  flowise:`
+    <div class="callout callout-tip" style="margin-bottom:20px"><strong>Platform:</strong> Flowise — open source visual agent builder. Free at flowiseai.com or run locally with <code style="background:var(--black3);padding:2px 6px;border-radius:3px;color:var(--yellow)">npx flowise start</code>.</div>
+    ${buildStepCards([
+      {n:1,icon:'🌊',title:'Open Flowise & Create a Chatflow',body:'Go to <strong>flowiseai.com</strong> (or localhost:3000). Click <strong>Add New → Chatflow</strong>. Name it <code>Memory Agent</code>. You should see a blank canvas.',tip:'You\'ll need a Flowise Cloud account or Node.js 18+ for local.'},
+      {n:2,icon:'⚙️',title:'Add a Chat OpenAI Node',body:'In the node search panel type <strong>"Chat OpenAI"</strong>. Drag it onto the canvas. Set your OpenAI API key in the credential field. Set model to <code>gpt-4o</code> or <code>gpt-3.5-turbo</code>.'},
+      {n:3,icon:'🧠',title:'Add a BufferMemory Node',body:'Search the node library for <strong>"Buffer Memory"</strong>. Drag it onto the canvas. This node maintains the full transcript window. Key settings:<br/><br/>• <strong>Memory Key:</strong> <code>chat_history</code><br/>• <strong>Return Messages:</strong> <code>true</code><br/>• <strong>Input Key:</strong> <code>input</code><br/><br/>For longer sessions, try <strong>"ConversationSummaryMemory"</strong> instead — it automatically compresses old turns.',doc:{label:'Flowise Memory Nodes',url:'https://docs.flowiseai.com/integrations/langchain/memory'}},
+      {n:4,icon:'🔗',title:'Connect Memory → Agent',body:'Add a <strong>ConversationChain</strong> node. Connect:<br/><br/>→ <strong>Chat OpenAI</strong> output → <em>Language Model</em> input of ConversationChain<br/>→ <strong>Buffer Memory</strong> output → <em>Memory</em> input of ConversationChain<br/><br/>Add a response node. Save the chatflow.',warn:'⚠️ If you skip the Memory connection, the ConversationChain runs without history — you\'ll get the same stateless behavior as no-memory mode.'},
+      {n:5,icon:'▶️',title:'Test: Reference Something From Earlier',body:'Open the Chat panel. In message 1 say: <code>"My name is Jordan and I\'m evaluating AI tools for a healthcare startup."</code><br/><br/>In message 2 say: <code>"What did I tell you my company\'s focus was?"</code><br/><br/>The agent should answer correctly — referencing what you said in message 1. The Buffer Memory node is providing the full history to the LLM on every turn.',callout:'Expected result: The agent answers with "healthcare startup" — information it could only know from message 1.'},
+      {n:6,icon:'🔮',title:'Optional: Upgrade to Vector Memory',body:'To implement semantic memory (full RAG-style recall): replace Buffer Memory with a <strong>"VectorStoreRetrieverMemory"</strong> node. Connect it to a <strong>Pinecone</strong> or <strong>Chroma</strong> vector store node. This stores each turn as an embedding and retrieves the most semantically relevant turns — not just the most recent ones.',doc:{label:'Flowise Vector Store Nodes',url:'https://docs.flowiseai.com/integrations/langchain/vector-stores'}},
+    ])}`,
+  relevance:`
+    <div class="callout callout-tip" style="margin-bottom:20px"><strong>Platform:</strong> Relevance AI — free at relevanceai.com. Native memory features built in — no extra nodes needed.</div>
+    ${buildStepCards([
+      {n:1,icon:'🧬',title:'Create an Agent in Relevance AI',body:'Go to <strong>relevanceai.com → Agents → Create Agent</strong>. Name it <code>Memory Demo Agent</code>. Select a base model (GPT-4o or Claude).',doc:{label:'Relevance AI Agent Docs',url:'https://documentation.relevanceai.com/agent/introduction'}},
+      {n:2,icon:'🧠',title:'Enable Conversation History',body:'In the Agent settings panel, find <strong>"Conversation Memory"</strong>. Toggle <strong>Enable conversation history</strong> to ON. Set:<br/><br/>• <strong>Memory Type:</strong> <code>Full History</code> for short sessions, or <code>Summary</code> for longer ones<br/>• <strong>Max Turns:</strong> Start with <code>20</code>',tip:'Relevance AI handles the memory plumbing automatically — you don\'t need to wire nodes manually. This is its main advantage over Flowise for beginners.'},
+      {n:3,icon:'🎯',title:'Write a Memory-Aware System Prompt',body:'In the System Prompt field, add this instruction:<br/><br/><div style="background:var(--black3);border-radius:var(--r);padding:12px;font-family:\'JetBrains Mono\',monospace;font-size:.8rem;color:var(--gray-lt);margin-top:8px;line-height:1.7">You are a helpful assistant with perfect conversational memory. You always reference what the user has told you in previous turns. If the user asks "what did I say about X?" you answer from the conversation history. Never claim to not remember something the user told you in this session.</div>',tip:'The system prompt instructs the LLM to USE the memory it\'s given. Without this instruction, the LLM may still "forget" even when the history is injected — it needs to be told to reference it.'},
+      {n:4,icon:'▶️',title:'Test: The Three-Turn Memory Check',body:'Open the agent chat. Run this exact sequence:<br/><br/><strong>Turn 1:</strong> <code>"I\'m building an AI agent for a clinic. My main concern is HIPAA compliance and latency under 2 seconds."</code><br/><strong>Turn 2:</strong> <code>"What were my two main concerns again?"</code><br/><strong>Turn 3:</strong> <code>"Given those concerns, which memory type would you recommend for my use case?"</code><br/><br/>Turn 2 tests recall. Turn 3 tests reasoning that builds on recalled context.',callout:'Expected: Turn 2 returns "HIPAA compliance and latency". Turn 3 should recommend Buffer or Vector memory based on the healthcare context — using your stated concerns.'},
+      {n:5,icon:'🔮',title:'Optional: Enable Long-Term Memory (Vector)',body:'In Relevance AI, go to <strong>Agent Settings → Long-Term Memory → Enable</strong>. This stores each conversation as embeddings in Relevance\'s managed vector store. On future conversations the agent can retrieve facts from sessions that ended weeks ago — equivalent to Vector Memory + RAG across sessions.',doc:{label:'Relevance AI Long-Term Memory',url:'https://documentation.relevanceai.com/agent/memory'}},
+    ])}`,
+  code:`
+    <div class="callout callout-tip" style="margin-bottom:20px"><strong>Prerequisites:</strong> Python 3.10+, <code style="background:var(--black3);padding:2px 6px;border-radius:3px;color:var(--yellow)">pip install langchain langchain-openai</code>, OpenAI API key.</div>
+    ${buildStepCards([
+      {n:1,icon:'🪣',title:'Buffer Memory — Full Transcript',body:'The simplest implementation. Every turn is prepended to the next API call as-is.',code:`from langchain.memory import ConversationBufferMemory
+from langchain_openai import ChatOpenAI
+from langchain.chains import ConversationChain
+
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+memory = ConversationBufferMemory(return_messages=True)
+chain = ConversationChain(llm=llm, memory=memory, verbose=True)
+
+# Turn 1
+resp1 = chain.predict(input="My name is Maya. I work in healthcare AI.")
+print(resp1)
+
+# Turn 2 — memory agent should recall the name
+resp2 = chain.predict(input="What did I say my name was?")
+print(resp2)  # → "You said your name is Maya."`,tip:'Set <code>verbose=True</code> to see exactly what gets sent to the LLM — including the injected history. This is the fastest way to understand what memory is doing.',doc:{label:'LangChain Buffer Memory',url:'https://python.langchain.com/docs/modules/memory/types/buffer'}},
+      {n:2,icon:'📝',title:'Summary Memory — Compressed History',body:'Automatically compresses old turns into a summary when the buffer grows large.',code:`from langchain.memory import ConversationSummaryMemory
+
+llm = ChatOpenAI(model="gpt-4o")
+memory = ConversationSummaryMemory(
+    llm=llm,
+    return_messages=True,
+    max_token_limit=200  # compress when buffer exceeds 200 tokens
+)
+chain = ConversationChain(llm=llm, memory=memory, verbose=True)
+
+# After 5+ turns you'll see memory.predict_new_summary() fire
+# and old turns collapse into a summary paragraph`,doc:{label:'LangChain Summary Memory',url:'https://python.langchain.com/docs/modules/memory/types/summary'}},
+      {n:3,icon:'🔮',title:'Vector Memory — RAG-Style Retrieval',body:'Embeds each turn and retrieves semantically relevant history — this IS RAG applied to conversation.',code:`from langchain.memory import VectorStoreRetrieverMemory
+from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
+
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma(embedding_function=embeddings)
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+
+memory = VectorStoreRetrieverMemory(retriever=retriever)
+
+# Save past turns explicitly
+memory.save_context(
+    {"input": "My name is Maya and my budget is $50k"},
+    {"output": "Got it, I'll remember that."}
+)
+memory.save_context(
+    {"input": "I prefer async communication"},
+    {"output": "Noted — async preferred."}
+)
+
+# Later — semantic retrieval finds the most relevant turns
+relevant = memory.load_memory_variables({"prompt": "What did Maya say about her budget?"})
+print(relevant)  # → retrieves the budget turn, not the async turn`,tip:'<strong>This is RAG.</strong> The vector store is the knowledge base. The user\'s current message is the query. The top-k retrieved turns are the context chunks. The LLM generates with that context injected.',doc:{label:'LangChain Vector Store Memory',url:'https://python.langchain.com/docs/modules/memory/types/vectorstore_retriever_memory'}},
+    ])}
+    <div style="margin-top:16px"><button class="btn btn-ghost" onclick="document.getElementById('buildNextBtn').style.display=\'inline-flex\'">I\'ve Completed the Implementation →</button></div>`,
+};
+
+function buildStepCards(steps){
+  return steps.map(step=>`
+    <div style="border-left:3px solid var(--line);padding:0 0 24px 24px;position:relative;margin-left:14px;margin-bottom:0">
+      <div style="position:absolute;left:-19px;top:0;width:34px;height:34px;border-radius:50%;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;color:#fff">${step.n}</div>
+      <div style="padding-top:4px;margin-bottom:10px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">${step.icon} ${step.title}</div>
+        <div style="font-size:.92rem;color:var(--gray-lt);line-height:1.75">${step.body}</div>
+        ${step.code?`<div style="background:var(--black3);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin-top:12px;position:relative"><button onclick="copyCode(this)" style="position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--black4);border:1px solid var(--line2);border-radius:3px;font-size:.72rem;font-weight:700;color:var(--gray);cursor:pointer">Copy</button><pre style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gray-lt);white-space:pre;overflow-x:auto;line-height:1.7">${escHtml(step.code)}</pre></div>`:''}
+        ${step.tip?`<div class="callout callout-tip" style="margin-top:10px">💡 <strong>Tip:</strong> ${step.tip}</div>`:''}
+        ${step.warn?`<div class="callout callout-warn" style="margin-top:10px">${step.warn}</div>`:''}
+        ${step.callout?`<div class="callout callout-success" style="margin-top:10px">✓ <strong>Expected result:</strong> ${step.callout}</div>`:''}
+        ${step.doc?`<a class="btn btn-ghost" href="${step.doc.url}" target="_blank" rel="noopener" style="margin-top:10px;font-size:.8rem;display:inline-flex;align-items:center;gap:6px;padding:6px 14px">📖 ${step.doc.label} ↗</a>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyCode(btn){const pre=btn.nextElementSibling;navigator.clipboard.writeText(pre.textContent).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',2000);});}
+
+let currentPlatform=null;
+function showPlatform(p){
+  currentPlatform=p;
+  ['flowise','relevance','code'].forEach(k=>{
+    const b=document.getElementById('pbtn-'+k);
+    b.style.borderColor=k===p?'var(--GA-red)':'var(--line2)';
+    b.style.color=k===p?'var(--GA-red)':'var(--gray-lt)';
+  });
+  document.getElementById('platformGuide').innerHTML=PLATFORM_GUIDES[p]||'';
+  document.getElementById('buildNextBtn').style.display='inline-flex';
+}
+
+// ─── QUIZ ─────────────────────────────────────────────────────────────────────
+const QUESTIONS=[
+  {q:'A customer service agent has a 2-hour chat session with a user. After turn 40, the buffer memory is hitting the context window limit. Which memory strategy should replace or supplement it?',
+   opts:['Vector memory — embed all 40 turns and retrieve top-3 on each new message','Switch to a memoryless model','Summary memory — compress older turns into a running summary while keeping recent turns raw','Delete the conversation and start over'],
+   ans:2,
+   ok:'Correct! Summary memory is the right upgrade for long sessions. It compresses old turns into a condensed summary, freeing context window space while preserving the key thread of the conversation.',
+   bad:'Not quite. Summary memory is the right answer — it compresses older turns into a running paragraph while preserving recent raw turns. Vector memory is better for multi-session recall, not in-session compression.'},
+  {q:'What is the core mechanism that conversational memory and RAG share?',
+   opts:['Both use the same LLM model','Both require a Pinecone account','Both follow Retrieve → Augment → Generate — the difference is only what\'s in the knowledge base','Both store data in SQL databases'],
+   ans:2,
+   ok:'Correct! The pattern is identical: retrieve relevant content from a knowledge base, inject it into the LLM context (augment), and generate a grounded response. Conversational memory uses past turns as the knowledge base; RAG uses external documents.',
+   bad:'Not quite. The shared pattern is Retrieve → Augment → Generate. In conversational memory, the "knowledge base" is your own conversation history. In RAG, it\'s external documents. Same pipeline, different data source.'},
+  {q:'In the system design architecture, what happens AFTER the user sends a new message and BEFORE the LLM generates a response?',
+   opts:['The response is generated first, then stored','The message is embedded → vector store queried → relevant turns retrieved → context assembled → LLM receives enriched prompt','The entire conversation is re-indexed from scratch','The user\'s message is sent directly to the LLM with no modification'],
+   ans:1,
+   ok:'Correct! This is the memory retrieval pipeline: embed the new query, search the vector store for relevant past turns, assemble those turns into the LLM\'s context window alongside the new message, then generate.',
+   bad:'Not quite. The pipeline is: embed → retrieve → augment → generate. The LLM receives an enriched prompt containing both the new message AND the most relevant retrieved history before it generates anything.'},
+  {q:'Why is vector memory described as "RAG applied to your own conversation history"?',
+   opts:['Because it requires a Pinecone account','Because it uses the same mechanism: embed the knowledge base (past turns), embed the query (new message), retrieve by cosine similarity, inject into context before generation','Because it is slower than buffer memory','Because it only works with GPT-4'],
+   ans:1,
+   ok:'Correct! The mechanism is literally identical: the conversation history is the knowledge base (embedded and stored), the user\'s new message is the query, and the top-k similar past turns are the "retrieved chunks" injected into the LLM\'s context.',
+   bad:'Not quite. The mechanism is the same as RAG: the history is the knowledge base (embedded into a vector store), the current message is the query, retrieved turns are the context chunks. The data source is different — not external documents, but your own prior conversation.'},
+  {q:'A Flowise ConversationChain node is returning responses as if it has no memory, even though a BufferMemory node is connected. What is the most likely cause?',
+   opts:['The LLM model is too small to use memory','The Buffer Memory node is connected to the wrong input — it must be wired to the "Memory" input of ConversationChain, not a generic input','The API key is invalid','Buffer Memory requires a vector database'],
+   ans:1,
+   ok:'Correct! In Flowise, the Memory node must be explicitly wired to the "Memory" input slot of the ConversationChain node. If it\'s connected to the wrong slot or not connected at all, the chain runs without history.',
+   bad:'Not quite. The most common Flowise memory failure is a wiring error — the BufferMemory node must be connected specifically to the "Memory" input of the ConversationChain node, not just placed on the canvas.'},
+  {q:'A production healthcare agent needs two things: it must remember what the patient said earlier in the current session AND it must know clinical guidelines it wasn\'t trained on. Which architecture is correct?',
+   opts:['One vector store for everything','Two vector stores in parallel: one for conversation history (per-session, PII-aware), one for the clinical knowledge base (persistent, RAG-style) — both inject into the LLM context','Use buffer memory for everything and load the guidelines into the system prompt','There is no way to have both capabilities at once'],
+   ans:1,
+   ok:'Correct! This is Hybrid Memory Architecture: conversational memory for the patient\'s session history (dynamic, PII-aware) + a RAG knowledge base for clinical guidelines (static, shared). Both inject into the LLM context simultaneously.',
+   bad:'Not quite. The correct design is two parallel vector stores: one for the conversation session (dynamic, per-patient, PII-handled carefully) and one for the clinical knowledge base (static, shared, RAG-style). The LLM receives injections from both before generating.'},
+  {q:'In the retrieval flow, what happens to a new conversation turn AFTER the agent generates a response?',
+   opts:['It is discarded — only the user\'s messages are stored','Both the user message and the agent reply are embedded and stored in the vector store for future retrieval','Only the agent reply is stored','Nothing — storage only happens at the start of a session'],
+   ans:1,
+   ok:'Correct! The full turn — user message + agent reply — is embedded and stored in the vector store. This ensures that future queries can retrieve not just what the user said, but what the agent previously committed to or stated.',
+   bad:'Not quite. Both the user message AND the agent\'s reply are embedded and stored after each turn. This is critical: you want to be able to recall what the agent said (not just what the user said) when reasoning about prior commitments or decisions.'},
+];
+
+let qIdx=0,qScore=0,quizStarted=false,qAnswered=false;
+function initQuiz(){quizStarted=true;qIdx=0;qScore=0;showQ();}
+function showQ(){
+  qAnswered=false;
+  const q=QUESTIONS[qIdx];
+  document.getElementById('qProg').style.width=(qIdx/QUESTIONS.length*100)+'%';
+  document.getElementById('qMeta').textContent=`Question ${qIdx+1} of ${QUESTIONS.length}`;
+  document.getElementById('qScoreTxt').textContent=`Score: ${qScore} / ${qIdx}`;
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFB').className='fb-box';
+  document.getElementById('quizFB').innerHTML='';
+  document.getElementById('qNextBtn').style.display='none';
+  const L=['A','B','C','D'];
+  document.getElementById('quizOpts').innerHTML=q.opts.map((o,i)=>
+    `<button class="q-opt" onclick="answerQ(${i})" id="opt${i}"><div class="opt-k">${L[i]}</div>${o}</button>`
+  ).join('');
+}
+function answerQ(i){
+  if(qAnswered)return;qAnswered=true;
+  const q=QUESTIONS[qIdx];const ok=i===q.ans;
+  if(ok)qScore++;
+  document.querySelectorAll('.q-opt').forEach((el,idx)=>{
+    el.classList.add('disabled');
+    if(idx===q.ans)el.classList.add('correct');
+    else if(idx===i&&!ok)el.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFB');
+  fb.innerHTML=`<span style="font-size:1.1rem;flex-shrink:0">${ok?'✓':'✗'}</span><span>${ok?q.ok:q.bad}</span>`;
+  fb.className='fb-box show '+(ok?'ok':'bad');
+  document.getElementById('qScoreTxt').textContent=`Score: ${qScore} / ${qIdx+1}`;
+  document.getElementById('qNextBtn').style.display='inline-flex';
+  if(qIdx===QUESTIONS.length-1)document.getElementById('qNextBtn').textContent='See Results →';
+}
+function nextQ(){qIdx++;if(qIdx>=QUESTIONS.length){showQuizDone();return;}showQ();}
+function showQuizDone(){
+  document.getElementById('quizActive').style.display='none';
+  document.getElementById('quizDone').style.display='block';
+  const pct=Math.round(qScore/QUESTIONS.length*100);
+  sectionScores.quiz={earned:qScore,possible:QUESTIONS.length};
+  document.getElementById('qBadge').innerHTML=`<span class="badge ${pct>=70?'b-green':'b-red'}">${qScore}/${QUESTIONS.length} · ${pct}%</span>`;
+  document.getElementById('qMsg').textContent=pct>=70
+    ?`Strong! You scored ${pct}%. You can now design, implement, and reason about conversational memory — and explain its relationship to RAG.`
+    :`You scored ${pct}%. Review the Memory Types Explorer and the RAG connection section — the quiz draws heavily from both.`;
+  if(pct>=70)markDone('quiz');
+}
+
+// ─── RESULTS ─────────────────────────────────────────────────────────────────
+function buildResults(){
+  markDone('results');
+  const te=Object.values(sectionScores).reduce((s,x)=>s+(x.earned||0),0);
+  const tp=Object.values(sectionScores).reduce((s,x)=>s+(x.possible||0),0);
+  const pct=tp>0?Math.round((te/tp)*100):0;
+  const grade=pct>=90?{l:'Memory Architect',  e:'🧠',m:'Outstanding — you understand memory at the system level.'}:
+              pct>=70?{l:'Context Engineer',   e:'🔮',m:'Strong work. Review what you missed.'}:
+              pct>=50?{l:'Memory Apprentice',  e:'💾',m:'Good start — revisit the RAG connection and sequencer.'}:
+                      {l:'Explorer',           e:'🔍',m:'Re-read the memory types and re-try the activities.'};
+  const circ=2*Math.PI*52,dash=circ*(1-pct/100);
+  const breakdown=[
+    {key:'types',  label:'Memory Classification'},
+    {key:'sysdes', label:'System Architecture Canvas'},
+    {key:'seq',    label:'Retrieval Flow Sequencer'},
+    {key:'quiz',   label:'Knowledge Check Quiz'},
+  ];
+  const rows=breakdown.map(item=>{
+    const s=sectionScores[item.key];if(!s)return'';
+    const p=Math.round((s.earned/s.possible)*100);
+    const col=p>=80?'var(--green)':p>=50?'var(--yellow)':'var(--GA-red)';
+    return `<div class="score-row"><div class="score-dot" style="background:${col}"></div>
+      <span style="flex:1;font-size:.9rem;font-weight:500;color:var(--gray-lt)">${item.label}</span>
+      <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${p}%;background:${col}"></div></div>
+      <span style="font-size:.82rem;color:var(--gray);min-width:38px;text-align:right">${s.earned}/${s.possible}</span>
+      <span class="badge" style="background:${p>=80?'rgba(34,197,94,.15)':p>=50?'rgba(245,197,24,.15)':'rgba(232,51,58,.15)'};color:${col};min-width:38px;text-align:center">${p}%</span>
+    </div>`;
+  }).join('');
+  const takeaways=[
+    'Buffer → Summary → Vector is a spectrum of trade-offs: precision vs. compression vs. semantic relevance. Production agents often chain all three — buffer for the last 10 turns, summary for older turns, vector for cross-session recall.',
+    'Conversational memory IS RAG — the conversation history is the knowledge base, the new message is the query, retrieved turns are the context chunks. Understanding this unifies two concepts that are usually taught as separate topics.',
+    'System design matters: a memory-enabled agent requires an embedding model, a vector store, a retrieval engine, and a context builder — in addition to the LLM. Getting the wiring right (what feeds what, in what order) is the engineer\'s job, not the LLM\'s.',
+  ].map((t,i)=>`<div class="tk-item"><div class="tk-num">0${i+1}</div><div class="tk-txt">${t}</div></div>`).join('');
+  document.getElementById('resultsBody').innerHTML=`
+    <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding-bottom:36px;border-bottom:1px solid var(--line);margin-bottom:32px">
+      <div class="results-ring">
+        <svg width="120" height="120" style="transform:rotate(-90deg)" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--black3)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--GA-red)" stroke-width="8"
+            stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${dash.toFixed(1)}"
+            stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+        </svg>
+        <div class="results-ring-txt"><div class="ring-pct">${pct}%</div><div class="ring-sub">score</div></div>
+      </div>
+      <div>
+        <div style="font-size:2rem;margin-bottom:4px">${grade.e}</div>
+        <h2 style="font-size:clamp(2rem,5vw,2.8rem);margin-bottom:6px">${grade.l}</h2>
+        <p style="color:var(--gray-lt);font-size:.95rem">${grade.m}</p>
+        <p style="color:var(--gray-dk);font-size:.82rem;margin-top:6px;font-family:'JetBrains Mono',monospace">${te} pts earned · ${tp} pts possible</p>
+      </div>
+    </div>
+    <span class="eyebrow">Score Breakdown</span>
+    <div class="card" style="padding:8px 20px;margin-bottom:28px">${rows}</div>
+    <span class="eyebrow">Key Takeaways</span>
+    <div class="card" style="padding:8px 20px;margin-bottom:24px">${takeaways}</div>
+    <div style="background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:16px">
+      <div style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px">Reference Documentation Used in This Lab</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <a class="btn btn-ghost" href="https://python.langchain.com/docs/modules/memory/" target="_blank" style="font-size:.8rem;padding:6px 14px">LangChain Memory Docs ↗</a>
+        <a class="btn btn-ghost" href="https://docs.flowiseai.com/integrations/langchain/memory" target="_blank" style="font-size:.8rem;padding:6px 14px">Flowise Memory Nodes ↗</a>
+        <a class="btn btn-ghost" href="https://documentation.relevanceai.com/agent/memory" target="_blank" style="font-size:.8rem;padding:6px 14px">Relevance AI Memory ↗</a>
+        <a class="btn btn-ghost" href="https://www.pinecone.io/learn/vector-database/" target="_blank" style="font-size:.8rem;padding:6px 14px">Pinecone: Vector Databases ↗</a>
+        <a class="btn btn-ghost" href="https://docs.trychroma.com/" target="_blank" style="font-size:.8rem;padding:6px 14px">Chroma Vector Store ↗</a>
+      </div>
+    </div>
+    <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:var(--r-lg);padding:20px">
+      <p style="font-size:.92rem;color:var(--gray-lt);line-height:1.7">
+        🎉 <strong style="color:#fff">You built a memory-enabled agent and can explain why it works.</strong><br/>
+        Next module: <strong style="color:#fff">Multi-Step Reasoning Chains</strong> — where you chain tool calls, memory lookups, and LLM reasoning into a single autonomous workflow.
+      </p>
+    </div>`;
+}
+</script>
+</body>
+</html>
