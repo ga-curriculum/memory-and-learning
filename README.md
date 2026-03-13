@@ -300,4 +300,4 @@ https://pages.git.generalassemb.ly/Build-AI-Agents/Memory-and-Learning/
 
 ---
 
-*General Assembly · Build AI Agents · BAA 16.0 · © 2026*
+*General Assembly · Build AI Agents · BAA 8.0 · © 2026*
