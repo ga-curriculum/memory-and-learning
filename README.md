@@ -296,3 +296,8 @@ https://pages.git.generalassemb.ly/Build-AI-Agents/Memory-and-Learning/
 - [LangChain — Memory Types Overview](https://docs.langchain.com/docs/components/memory)
 - European Commission — *General Data Protection Regulation (GDPR), Article 17: Right to Erasure*
 - Lilian Weng — *LLM-powered Autonomous Agents: Memory* (2023) — [lilianweng.github.io](https://lilianweng.github.io/posts/2023-06-23-agent/#memory)
+
+
+---
+
+*General Assembly · Build AI Agents · BAA 16.0 · © 2026*
