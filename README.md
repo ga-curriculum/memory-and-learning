@@ -272,7 +272,7 @@ A memory system that fails more than two of these checks should not be used with
 
 ## 5. Lab (60 min)
 
-*Lab details in the Lab Guide document.*
+https://pages.git.generalassemb.ly/Build-AI-Agents/Memory-and-Learning/
 
 ---
 
