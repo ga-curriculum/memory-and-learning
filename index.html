@@ -4,7 +4,17 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Conversational Memory — General Assembly BAA 8.0</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+@font-face{font-family:"Barlow Condensed Bold";src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/barlow-condensed-bold.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:normal;font-weight:400;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-regular.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:italic;font-weight:400;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:normal;font-weight:700;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-700.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:italic;font-weight:700;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-700italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:normal;font-weight:800;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-800.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Nunito Sans";font-style:italic;font-weight:800;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/nunito-sans-v15-latin-800italic.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Cascadia Mono";font-style:normal;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/cascadia-mono.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Cascadia Mono";font-style:italic;src:url("https://ga-curriculum.github.io/universal-resources-internal/static/v2/fonts/cascadia-mono-italic.woff2") format("woff2");font-display:swap}
+</style>
 <style>
 :root{
   --black:#0d0d0d;--black2:#1a1a1a;--black3:#252525;--black4:#333;
@@ -17,30 +27,30 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);font-size:16px;line-height:1.6;min-height:100vh}
+body{font-family:'Nunito Sans',sans-serif;background:var(--black);color:var(--white);font-size:16px;line-height:1.6;min-height:100vh}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--black2)}::-webkit-scrollbar-thumb{background:var(--black4);border-radius:3px}
 header{position:sticky;top:0;z-index:500;background:var(--black);border-bottom:2px solid var(--GA-red);display:flex;align-items:stretch;height:58px}
 .ga-logo{display:flex;align-items:center;gap:10px;padding:0 20px;border-right:1px solid var(--line);flex-shrink:0;cursor:pointer}
-.ga-mark{width:32px;height:32px;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;border-radius:2px}
-.ga-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gray-lt);text-transform:uppercase;line-height:1.2}
+.ga-mark{width:32px;height:32px;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed Bold',sans-serif;font-size:14px;font-weight:800;color:#fff;border-radius:2px}
+.ga-name{font-family:'Barlow Condensed Bold',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gray-lt);text-transform:uppercase;line-height:1.2}
 .ga-name span{display:block;font-size:10px;color:var(--gray);font-weight:600}
 .tab-bar{display:flex;align-items:stretch;overflow-x:auto;flex:1;scrollbar-width:none}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab{display:flex;align-items:center;padding:0 15px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;position:relative;top:2px}
+.tab{display:flex;align-items:center;padding:0 15px;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;position:relative;top:2px}
 .tab:hover{color:#fff}
 .tab.active{color:#fff;border-bottom-color:var(--GA-red)}
 .hd-end{display:flex;align-items:center;padding:0 18px;border-left:1px solid var(--line);flex-shrink:0}
-.prog-chip{background:var(--GA-red);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 12px;border-radius:20px}
+.prog-chip{background:var(--GA-red);color:#fff;font-family:'Cascadia Mono',monospace;font-size:11px;padding:4px 12px;border-radius:20px}
 .section{display:none}.section.active{display:block}
 .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
-.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--GA-red);margin-bottom:10px;display:block}
-h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:16px}
+.eyebrow{font-family:'Barlow Condensed Bold',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--GA-red);margin-bottom:10px;display:block}
+h1{font-family:'Barlow Condensed Bold',sans-serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:16px}
 h1 .red{color:var(--GA-red)}
-h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;line-height:1.1;color:#fff;margin-bottom:8px}
+h2{font-family:'Barlow Condensed Bold',sans-serif;font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;line-height:1.1;color:#fff;margin-bottom:8px}
 h2 .red{color:var(--GA-red)}
 .lead{font-size:1.05rem;color:var(--gray-lt);line-height:1.7;margin-bottom:28px;max-width:640px}
 .hr{height:1px;background:var(--line);margin:36px 0}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--r);font-family:'Barlow',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--r);font-family:'Nunito Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;white-space:nowrap}
 .btn-red{background:var(--GA-red);color:#fff;border-color:var(--GA-red)}.btn-red:hover{background:var(--GA-red2);transform:translateY(-1px)}
 .btn-green{background:var(--green);color:var(--black);border-color:var(--green)}.btn-green:hover{background:#16a34a;transform:translateY(-1px)}
 .btn-ghost{background:transparent;color:var(--gray-lt);border:2px solid var(--line2);padding:10px 20px;font-size:.88rem;font-weight:600;cursor:pointer;border-radius:var(--r);transition:all .15s}.btn-ghost:hover{border-color:var(--gray);color:#fff}
@@ -55,12 +65,12 @@ h2 .red{color:var(--GA-red)}
 .hero-kicker .dot{width:8px;height:8px;background:var(--GA-red);border-radius:50%}
 .obj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:32px}
 .obj-card{background:var(--black2);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:flex;gap:14px}
-.obj-num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--GA-red);line-height:1;flex-shrink:0}
+.obj-num{font-family:'Barlow Condensed Bold',sans-serif;font-size:2rem;font-weight:900;color:var(--GA-red);line-height:1;flex-shrink:0}
 .obj-body{font-size:.9rem;color:var(--gray-lt);line-height:1.55;padding-top:4px}
 .roadmap{display:flex;flex-direction:column}
 .rm-item{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
 .rm-item:last-child{border-bottom:none}
-.rm-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;border:2px solid var(--line);background:var(--black3);color:var(--gray);transition:all .25s}
+.rm-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed Bold',sans-serif;font-size:13px;font-weight:700;border:2px solid var(--line);background:var(--black3);color:var(--gray);transition:all .25s}
 .rm-dot.done{background:var(--green);border-color:var(--green);color:var(--black)}
 .rm-dot.active{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
 .rm-label{font-size:.95rem;font-weight:600;color:var(--gray);padding-top:6px;transition:color .2s}
@@ -84,16 +94,16 @@ h2 .red{color:var(--GA-red)}
 .sim-panel{border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column}
 .sim-head{padding:12px 16px;display:flex;align-items:center;gap:8px}
 .sim-icon{font-size:1rem;flex-shrink:0}
-.sim-title{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+.sim-title{font-family:'Barlow Condensed Bold',sans-serif;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
 .sim-body{flex:1;padding:14px;min-height:260px;display:flex;flex-direction:column;gap:8px;background:var(--black2);border:1px solid var(--line);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);overflow-y:auto}
 .chat-bubble{padding:10px 14px;border-radius:10px;font-size:.85rem;line-height:1.6;max-width:92%;animation:fadeUp .25s ease both}
 .bubble-user{background:rgba(232,51,58,.12);border:1px solid rgba(232,51,58,.2);align-self:flex-end;color:#fca5a5}
 .bubble-agent{background:var(--black3);border:1px solid var(--line);align-self:flex-start;color:var(--gray-lt)}
 .bubble-agent.highlight{border-color:var(--green);background:rgba(34,197,94,.06);color:#fff}
 .bubble-agent.fail{border-color:var(--GA-red);background:rgba(232,51,58,.06);color:#fca5a5}
-.bubble-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gray-dk);margin-bottom:3px;letter-spacing:.06em;text-transform:uppercase}
+.bubble-label{font-family:'Cascadia Mono',monospace;font-size:.65rem;color:var(--gray-dk);margin-bottom:3px;letter-spacing:.06em;text-transform:uppercase}
 .sim-ctrl{padding:12px;background:var(--black3);border:1px solid var(--line);border-top:none;display:flex;gap:8px}
-.sim-input{flex:1;background:var(--black2);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#fff;outline:none}
+.sim-input{flex:1;background:var(--black2);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-family:'Nunito Sans',sans-serif;font-size:.88rem;color:#fff;outline:none}
 .sim-input:focus{border-color:var(--GA-red)}
 .sim-send{background:var(--GA-red);border:none;color:#fff;padding:8px 14px;border-radius:var(--r);font-weight:700;cursor:pointer;font-size:.85rem;transition:all .15s}
 .sim-send:hover{background:var(--GA-red2)}
@@ -107,17 +117,17 @@ h2 .red{color:var(--GA-red)}
 .drag-chip.wrong{background:rgba(232,51,58,.12);border-color:var(--GA-red);color:var(--GA-red);cursor:default}
 .drop-zone{border-radius:var(--r-lg);overflow:hidden;margin-bottom:10px}
 .dz-head{padding:12px 18px;display:flex;align-items:center;gap:10px}
-.dz-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.dz-title{font-family:'Barlow Condensed Bold',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .dz-sub{font-size:.76rem;color:rgba(255,255,255,.4);margin-top:1px}
 .dz-body{background:var(--black2);border:1px solid var(--line);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);padding:12px;min-height:68px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:background .15s}
 .dz-body.over{background:var(--black3)}
 /* SYSTEMS DESIGN CANVAS */
 .arch-canvas{background:var(--black3);border:1px solid var(--line2);border-radius:var(--r-lg);padding:24px;margin-bottom:20px;position:relative}
-.arch-title{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:18px}
+.arch-title{font-family:'Barlow Condensed Bold',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-dk);margin-bottom:18px}
 .arch-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .arch-node{border-radius:var(--r-lg);padding:10px 14px;text-align:center;min-width:100px;flex-shrink:0;position:relative;transition:all .2s}
 .arch-node .n-icon{font-size:1.2rem;display:block;margin-bottom:4px}
-.arch-node .n-label{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;display:block}
+.arch-node .n-label{font-family:'Barlow Condensed Bold',sans-serif;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;display:block}
 .arch-node .n-sub{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:2px;display:block}
 .arch-arrow{color:var(--gray-dk);font-size:.9rem;flex-shrink:0}
 .arch-drop-slot{border:2px dashed var(--line2);border-radius:var(--r-lg);padding:10px 14px;min-width:110px;min-height:68px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;cursor:pointer}
@@ -133,10 +143,10 @@ h2 .red{color:var(--GA-red)}
 .rag-flow{display:flex;flex-direction:column;gap:0}
 .rag-step{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);position:relative}
 .rag-step:last-child{border-bottom:none}
-.rag-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;border:2px solid}
+.rag-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed Bold',sans-serif;font-size:.85rem;font-weight:800;border:2px solid}
 .rag-label{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:3px}
 .rag-desc{font-size:.88rem;color:var(--gray-lt);line-height:1.6}
-.rag-match{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.75rem;font-weight:700;font-family:'JetBrains Mono',monospace;margin-top:4px}
+.rag-match{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.75rem;font-weight:700;font-family:'Cascadia Mono',monospace;margin-top:4px}
 /* SEQUENCE DRAG */
 .seq-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .seq-item{display:flex;align-items:flex-start;gap:12px;background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:13px 16px;cursor:grab;user-select:none;transition:all .18s}
@@ -145,7 +155,7 @@ h2 .red{color:var(--GA-red)}
 .seq-item.correct{border-color:var(--green);background:rgba(34,197,94,.04)}
 .seq-item.wrong{border-color:var(--GA-red)}
 .seq-handle{color:var(--gray-dk);flex-shrink:0;padding-top:2px}
-.seq-pos{width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .2s}
+.seq-pos{width:28px;height:28px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Cascadia Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .2s}
 .seq-item.correct .seq-pos{background:var(--green);border-color:var(--green);color:var(--black)}
 .seq-item.wrong .seq-pos{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
 .seq-icon{font-size:1rem;flex-shrink:0}
@@ -155,14 +165,14 @@ h2 .red{color:var(--GA-red)}
 .qz-meta span{font-size:.85rem;color:var(--gray)}
 .prog-bar{height:4px;background:var(--black3);border-radius:2px;margin-bottom:28px;overflow:hidden}
 .prog-fill{height:100%;background:var(--GA-red);border-radius:2px;transition:width .4s}
-.quiz-q{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;line-height:1.3;color:#fff;margin-bottom:20px}
+.quiz-q{font-family:'Barlow Condensed Bold',sans-serif;font-size:1.4rem;font-weight:700;line-height:1.3;color:#fff;margin-bottom:20px}
 .q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .q-opt{background:var(--black2);border:2px solid var(--line);border-radius:var(--r-lg);padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:14px;font-size:.95rem;color:var(--gray-lt);transition:all .16s;text-align:left;width:100%}
 .q-opt:hover:not(.disabled){border-color:var(--GA-red);color:#fff;background:rgba(232,51,58,.05)}
 .q-opt.correct{border-color:var(--green);background:rgba(34,197,94,.07);color:#fff}
 .q-opt.wrong{border-color:var(--GA-red);background:rgba(232,51,58,.08);color:#fff}
 .q-opt.disabled{cursor:default}
-.opt-k{width:30px;height:30px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .16s}
+.opt-k{width:30px;height:30px;border-radius:6px;flex-shrink:0;background:var(--black3);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Cascadia Mono',monospace;font-size:.75rem;font-weight:700;color:var(--gray);transition:all .16s}
 .q-opt.correct .opt-k{background:var(--green);border-color:var(--green);color:var(--black)}
 .q-opt.wrong .opt-k{background:var(--GA-red);border-color:var(--GA-red);color:#fff}
 .q-opt:hover:not(.disabled) .opt-k{border-color:var(--GA-red);color:var(--GA-red)}
@@ -173,7 +183,7 @@ h2 .red{color:var(--GA-red)}
 /* RESULTS */
 .results-ring{position:relative;width:120px;height:120px;flex-shrink:0}
 .results-ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-pct{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1}
+.ring-pct{font-family:'Barlow Condensed Bold',sans-serif;font-size:2rem;font-weight:900;line-height:1}
 .ring-sub{font-size:.7rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
 .score-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .score-row:last-child{border-bottom:none}
@@ -182,7 +192,7 @@ h2 .red{color:var(--GA-red)}
 .score-bar-fill{height:100%;border-radius:2px}
 .tk-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
 .tk-item:last-child{border-bottom:none}
-.tk-num{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--GA-red);flex-shrink:0;line-height:1;padding-top:2px}
+.tk-num{font-family:'Barlow Condensed Bold',sans-serif;font-size:1.6rem;font-weight:900;color:var(--GA-red);flex-shrink:0;line-height:1;padding-top:2px}
 .tk-txt{font-size:.92rem;color:var(--gray-lt);line-height:1.65}
 @keyframes typing{0%{width:0}100%{width:100%}}
 </style>
@@ -353,7 +363,7 @@ h2 .red{color:var(--GA-red)}
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
       <div style="background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.25);border-radius:var(--r-lg);padding:22px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:12px">Conversational Memory</div>
+        <div style="font-family:'Barlow Condensed Bold',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:12px">Conversational Memory</div>
         <div style="display:flex;flex-direction:column;gap:8px;font-size:.88rem;line-height:1.6">
           <div><span style="color:var(--teal);font-weight:700">Knowledge base:</span><span style="color:var(--gray-lt)"> Past conversation turns</span></div>
           <div><span style="color:var(--teal);font-weight:700">Query:</span><span style="color:var(--gray-lt)"> The user's current message</span></div>
@@ -363,7 +373,7 @@ h2 .red{color:var(--GA-red)}
         </div>
       </div>
       <div style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:var(--r-lg);padding:22px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px">RAG (Retrieval-Augmented Generation)</div>
+        <div style="font-family:'Barlow Condensed Bold',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px">RAG (Retrieval-Augmented Generation)</div>
         <div style="display:flex;flex-direction:column;gap:8px;font-size:.88rem;line-height:1.6">
           <div><span style="color:var(--purple);font-weight:700">Knowledge base:</span><span style="color:var(--gray-lt)"> External documents, databases, websites</span></div>
           <div><span style="color:var(--purple);font-weight:700">Query:</span><span style="color:var(--gray-lt)"> The user's current message</span></div>
@@ -824,7 +834,7 @@ function placeArchChip(slotId,chipId){
   const chip=ARCH_CHIPS.find(c=>c.id===chipId);
   const slotEl=document.getElementById('slot-'+slotId);
   slotEl.classList.add('filled');
-  slotEl.innerHTML=`<div style="text-align:center"><span style="font-size:1.4rem">${chip.icon}</span><div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:${chip.color};margin-top:4px">${chip.label.replace('\n','<br/>')}</div></div>`;
+  slotEl.innerHTML=`<div style="text-align:center"><span style="font-size:1.4rem">${chip.icon}</span><div style="font-family:'Barlow Condensed Bold',sans-serif;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:${chip.color};margin-top:4px">${chip.label.replace('\n','<br/>')}</div></div>`;
   const poolChip=document.getElementById('achip-'+chipId);
   if(poolChip)poolChip.style.display='none';
   updateArchBtn();
@@ -977,11 +987,11 @@ print(relevant)  # → retrieves the budget turn, not the async turn`,tip:'<stro
 function buildStepCards(steps){
   return steps.map(step=>`
     <div style="border-left:3px solid var(--line);padding:0 0 24px 24px;position:relative;margin-left:14px;margin-bottom:0">
-      <div style="position:absolute;left:-19px;top:0;width:34px;height:34px;border-radius:50%;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;color:#fff">${step.n}</div>
+      <div style="position:absolute;left:-19px;top:0;width:34px;height:34px;border-radius:50%;background:var(--GA-red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed Bold',sans-serif;font-size:.82rem;font-weight:800;color:#fff">${step.n}</div>
       <div style="padding-top:4px;margin-bottom:10px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">${step.icon} ${step.title}</div>
+        <div style="font-family:'Barlow Condensed Bold',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px">${step.icon} ${step.title}</div>
         <div style="font-size:.92rem;color:var(--gray-lt);line-height:1.75">${step.body}</div>
-        ${step.code?`<div style="background:var(--black3);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin-top:12px;position:relative"><button onclick="copyCode(this)" style="position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--black4);border:1px solid var(--line2);border-radius:3px;font-size:.72rem;font-weight:700;color:var(--gray);cursor:pointer">Copy</button><pre style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gray-lt);white-space:pre;overflow-x:auto;line-height:1.7">${escHtml(step.code)}</pre></div>`:''}
+        ${step.code?`<div style="background:var(--black3);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin-top:12px;position:relative"><button onclick="copyCode(this)" style="position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--black4);border:1px solid var(--line2);border-radius:3px;font-size:.72rem;font-weight:700;color:var(--gray);cursor:pointer">Copy</button><pre style="font-family:'Cascadia Mono',monospace;font-size:.78rem;color:var(--gray-lt);white-space:pre;overflow-x:auto;line-height:1.7">${escHtml(step.code)}</pre></div>`:''}
         ${step.tip?`<div class="callout callout-tip" style="margin-top:10px">💡 <strong>Tip:</strong> ${step.tip}</div>`:''}
         ${step.warn?`<div class="callout callout-warn" style="margin-top:10px">${step.warn}</div>`:''}
         ${step.callout?`<div class="callout callout-success" style="margin-top:10px">✓ <strong>Expected result:</strong> ${step.callout}</div>`:''}
@@ -1138,7 +1148,7 @@ function buildResults(){
         <div style="font-size:2rem;margin-bottom:4px">${grade.e}</div>
         <h2 style="font-size:clamp(2rem,5vw,2.8rem);margin-bottom:6px">${grade.l}</h2>
         <p style="color:var(--gray-lt);font-size:.95rem">${grade.m}</p>
-        <p style="color:var(--gray-dk);font-size:.82rem;margin-top:6px;font-family:'JetBrains Mono',monospace">${te} pts earned · ${tp} pts possible</p>
+        <p style="color:var(--gray-dk);font-size:.82rem;margin-top:6px;font-family:'Cascadia Mono',monospace">${te} pts earned · ${tp} pts possible</p>
       </div>
     </div>
     <span class="eyebrow">Score Breakdown</span>
